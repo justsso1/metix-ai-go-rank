@@ -80,7 +80,7 @@ export default function RecruitersViewApp({ initialResult, initialPage = initial
       const restored = applyRemoval(initialResult);
       if (restored.status === 'not_found') showMissingResult(restored, true);
       else history.replaceState({ ...history.state, rv: { page: scene, result: initialResult, scroll: 0 } }, '', location.href);
-    } else if (scene !== 'entry') { setPage('entry'); history.replaceState({}, '', '/'); }
+    } else if (scene !== 'entry') { setPage('entry'); history.replaceState({}, '', '/recruiters-view/'); }
     const previousRestoration = history.scrollRestoration; history.scrollRestoration = 'manual';
     const pop = (event: PopStateEvent) => {
       abortRef.current?.abort(); journeyActive.current = false; setLoading(false); setReveal(false); setJourney(null); setError('');
@@ -124,7 +124,7 @@ export default function RecruitersViewApp({ initialResult, initialPage = initial
 
   useEffect(() => {
     if (loading) return;
-    const scene = page === 'entry' ? 'root' : page === 'result' && location.pathname.startsWith('/share/') ? 'share' : page;
+    const scene = page === 'entry' ? 'root' : page === 'result' && location.pathname.startsWith('/recruiters-view/share/') ? 'share' : page;
     trackCampaignPage(scene);
     if (page === 'result' && result?.status === 'found' && journey === null) {
       trackCampaign('result_view', { mode: result.profileVersion === 'atlas' ? 'live' : 'demo' });
@@ -248,7 +248,7 @@ export default function RecruitersViewApp({ initialResult, initialPage = initial
         if (params) history.replaceState(view, '', address); else history.pushState(view, '', address);
         setPage(scene); setReturnScroll(params ? 0 : null);
       } else if (next.status === 'not_found') showMissingResult(next, !!params);
-      else { journeyActive.current = false; setJourney(null); if (params) { setPage('entry'); history.replaceState({}, '', '/'); } }
+      else { journeyActive.current = false; setJourney(null); if (params) { setPage('entry'); history.replaceState({}, '', '/recruiters-view/'); } }
 
     } catch (err) {
       if ((err as Error).name === "AbortError" && !timedOut) return;
@@ -290,7 +290,7 @@ export default function RecruitersViewApp({ initialResult, initialPage = initial
       window.localStorage.removeItem(indexNotificationKey(handle));
       window.localStorage.removeItem(CONTACT_KEY);
     } catch { /* This lookup is still cleared in memory. */ }
-    window.history.replaceState({}, "", "/");
+    window.history.replaceState({}, "", "/recruiters-view/");
     setPage('entry');
     setResult(null); setUrl(''); setError(''); setReveal(false); setReturnScroll(0);
     setToast("Removed from this lookup on this device.");
@@ -318,7 +318,7 @@ export default function RecruitersViewApp({ initialResult, initialPage = initial
         {journey !== null && <RankingJourney key={journey} result={result?.status === 'found' ? result : null}
           onComplete={finishJourney}
           onCancel={() => { abortRef.current?.abort(); journeyActive.current = false; setJourney(null); setLoading(false); setProgress(null); setReveal(false); }} />}
-        {!isEntry && !isResult && !isMissing && journey === null && <div className="rv-route-loading" role="status">{error ? <><p className="rv-error">{error}</p><a href="/">Try again</a></> : progress ? <LookupProgressView progress={progress} /> : <p>Loading your ranking…</p>}</div>}
+        {!isEntry && !isResult && !isMissing && journey === null && <div className="rv-route-loading" role="status">{error ? <><p className="rv-error">{error}</p><a href="/recruiters-view/">Try again</a></> : progress ? <LookupProgressView progress={progress} /> : <p>Loading your ranking…</p>}</div>}
         {isEntry && <div className="wrap">
           <form className="rv-composer" onSubmit={onSubmit}>
             <div className="rv-composer-label">
@@ -380,7 +380,7 @@ export default function RecruitersViewApp({ initialResult, initialPage = initial
 
         </div>}
         {isMissing && result?.status === 'not_found' && <div className="rv-missing-page"><div className="wrap">
-          <a className="rv-return" href="/"><ArrowLeft size={16} />Back to search</a>
+          <a className="rv-return" href="/recruiters-view/"><ArrowLeft size={16} />Back to search</a>
           <MissingResult key={result.handle} result={result} />
         </div></div>}
         <div className={`rv-journey-destination ${journey !== null ? 'is-covered' : ''}`} inert={journey !== null || undefined} aria-hidden={journey !== null || undefined}>
@@ -471,7 +471,7 @@ function FoundResult({ result: initialResult, onResultChange, reveal, onRemove, 
     </div></div>
     <div className="rv-below">
       <div className="rv-result-links">
-        <a href="/">Check another profile</a>
+        <a href="/recruiters-view/">Check another profile</a>
         <button type="button" onClick={onRemove}>Remove me</button>
       </div>
     </div>

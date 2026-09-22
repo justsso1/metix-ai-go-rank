@@ -61,9 +61,9 @@ export default function MotionDebugPanel() {
   useEffect(() => { if (settings.time >= duration) setPlaying(false); }, [settings.time, duration]);
 
   return <main className="rv-motion-lab">
-    <header className="rv-lab-heading"><div><p>RECRUITER'S VIEW / MOTION LAB</p><h1>Follow the same card.</h1></div><a href="/">Open campaign ↗</a></header>
+    <header className="rv-lab-heading"><div><p>RECRUITER'S VIEW / MOTION LAB</p><h1>Follow the same card.</h1></div><a href="/recruiters-view/">Open campaign ↗</a></header>
     <div ref={preview} className="rv-lab-preview" data-viewport={width}>
-      <div className="rv-lab-device" style={{ width: device.width * scale, height: device.height * scale }}><iframe key={`${width}-${zoom}`} ref={frame} src="/motion-preview/" title="Ranking animation preview" style={{ width: device.width, height: device.height, transform: `scale(${scale})` }} onLoad={() => {
+      <div className="rv-lab-device" style={{ width: device.width * scale, height: device.height * scale }}><iframe key={`${width}-${zoom}`} ref={frame} src="/recruiters-view/motion-preview/" title="Ranking animation preview" style={{ width: device.width, height: device.height, transform: `scale(${scale})` }} onLoad={() => {
         frame.current?.contentWindow?.postMessage({ channel: DEBUG_CHANNEL, ping: true, settings: latest.current }, window.location.origin);
       }} /></div>
       {!ready && <p className="rv-lab-loading" role="status">Loading preview…</p>}

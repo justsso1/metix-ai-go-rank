@@ -18,7 +18,7 @@ function encodeAttribution(data, timestamp = Date.now(), version = 1) {
 function createEnv({
   cookie = '',
   hostname = 'go.metix.ai',
-  pathname = '/',
+  pathname = '/recruiters-view/',
   readyState = 'complete',
   clarity = null,
   fetchImpl,
@@ -136,7 +136,7 @@ function lastBatch(fetchCalls) {
 }
 
 test('exposes the tracker surface + ported enums and queues a page_view on init', async () => {
-  const { window } = await run({ pathname: '/improve' });
+  const { window } = await run({ pathname: '/recruiters-view/improve' });
 
   assert.equal(typeof window.metix.track, 'function');
   assert.equal(typeof window.metix.tracker.flush, 'function');
@@ -226,7 +226,7 @@ test('uses a stable visitor-based sampling fallback when sessionStorage is block
 });
 
 test('flush() POSTs the queue as a batch with businessId + timestamp + eventId', async () => {
-  const { window, fetchCalls } = await run({ pathname: '/improve' });
+  const { window, fetchCalls } = await run({ pathname: '/recruiters-view/improve' });
   window.metix.track('cta_click', { location: 'hero' });
 
   await window.metix.tracker.flush();
@@ -242,13 +242,13 @@ test('flush() POSTs the queue as a batch with businessId + timestamp + eventId',
   assert.equal(cta.eventId, 'homepage.go-rank-improve.page.cta_click');
   assert.equal(typeof cta.timestamp, 'number');
   assert.equal(cta.properties.location, 'hero');
-  assert.equal(cta.properties.path, '/improve');
+  assert.equal(cta.properties.path, '/recruiters-view/improve');
   // queue is drained after a successful flush
   assert.equal(window.metix.tracker.queue.length, 0);
 });
 
 test('custom properties cannot spoof automatic dimensions or exceed the event cap', async () => {
-  const { window } = await run({ pathname: '/improve' });
+  const { window } = await run({ pathname: '/recruiters-view/improve' });
   const custom = Object.fromEntries(
     Array.from({ length: 30 }, (_, index) => [`custom_${index}`, index]),
   );
@@ -261,7 +261,7 @@ test('custom properties cannot spoof automatic dimensions or exceed the event ca
   });
 
   const event = window.metix.tracker.queue.find((item) => item.eventId.endsWith('.cta_click'));
-  assert.equal(event.properties.path, '/improve');
+  assert.equal(event.properties.path, '/recruiters-view/improve');
   assert.notEqual(event.properties.visitor_id, 'spoofed');
   assert.equal(event.properties.is_logged_in, 'false');
   assert.equal(event.properties.utm_source, 'direct');
@@ -269,7 +269,7 @@ test('custom properties cannot spoof automatic dimensions or exceed the event ca
 });
 
 test('object-form events cannot spoof event, page, user, or session identity', async () => {
-  const { window } = await run({ pathname: '/result' });
+  const { window } = await run({ pathname: '/recruiters-view/result' });
   window.metix.track({
     eventType: 'success',
     name: 'demo_complete',
@@ -292,11 +292,11 @@ test('object-form events cannot spoof event, page, user, or session identity', a
 
 for (const scene of ['root', 'result', 'share', 'improve', 'opportunities']) {
   test(`campaign ${scene} gets an explicit page ID without exposing handles`, async () => {
-    const pathname = scene === 'root' ? '/' : `/${scene}/private-person`;
+    const pathname = scene === 'root' ? '/recruiters-view/' : `/recruiters-view/${scene}/private-person`;
     const { window } = await run({ pathname });
     const page = window.metix.tracker.queue[0];
     assert.equal(page.pageId, `go-rank-${scene}`);
-    assert.equal(page.properties.path, scene === 'root' ? '/' : `/${scene}/:handle`);
+    assert.equal(page.properties.path, scene === 'root' ? '/recruiters-view/' : `/recruiters-view/${scene}/:handle`);
     assert.equal(page.properties.campaign, 'rank');
     assert.equal(JSON.stringify(page).includes('private-person'), false);
   });
@@ -418,7 +418,7 @@ test('a failed batch is dropped rather than re-queued', async () => {
 
 test('does NOT forward events to Clarity (backend is the only sink)', async () => {
   const clarity = createClarity();
-  const { window, fetchCalls } = await run({ clarity, pathname: '/improve' });
+  const { window, fetchCalls } = await run({ clarity, pathname: '/recruiters-view/improve' });
   window.metix.track('cta_click', { location: 'hero' });
   await window.metix.tracker.flush();
 
@@ -430,7 +430,7 @@ test('does NOT forward events to Clarity (backend is the only sink)', async () =
 });
 
 test('sends moduleId as a top-level field (not in eventId, not in properties)', async () => {
-  const { window, fetchCalls } = await run({ pathname: '/result' });
+  const { window, fetchCalls } = await run({ pathname: '/recruiters-view/result' });
   window.metix.track({
     eventType: 'start',
     name: 'demo_start',
@@ -596,7 +596,7 @@ test('does NOT auto-track same-origin links, mailto, or data-track links as outb
 });
 
 test('personal title, route, referrer and target never reach the upload payload', async () => {
-  const env = createEnv({ pathname: '/share/private-person' });
+  const env = createEnv({ pathname: '/recruiters-view/share/private-person' });
   env.document.title = 'Private Person — Top 1%';
   env.document.referrer = 'https://linkedin.com/in/private-person?email=secret@example.com';
   vm.runInNewContext(await readFile(scriptPath, 'utf8'), { window: env.window, document: env.document, URL, Event });
@@ -634,7 +634,7 @@ for (const hostname of ['localhost', '127.0.0.1', 'preview.example.com', 'metix.
 }
 
 test('all collection requests suppress the personal route in the HTTP Referer header', async () => {
-  const { window, fetchCalls } = await run({ pathname: '/share/private-person' });
+  const { window, fetchCalls } = await run({ pathname: '/recruiters-view/share/private-person' });
   window.metix.tracker.trackOnce({ eventType: 'custom' });
   window.metix.tracker.trackOnceAnonymous({ eventType: 'custom' });
   await window.metix.tracker.flush();

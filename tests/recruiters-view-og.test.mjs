@@ -43,13 +43,13 @@ test('only published mock snapshots get personalized share paths', () => {
   for (const result of samples) {
     const handle = result.profile.handle;
     assert.equal(hasShareSnapshot(handle), true);
-    assert.equal(sharePageUrl(handle), `https://go.metix.ai/share/${handle}`);
+    assert.equal(sharePageUrl(handle), `https://go.metix.ai/recruiters-view/share/${handle}`);
   }
   for (const handle of ['not-indexed', 'new-person', '__proto__', '../other']) {
     assert.equal(hasShareSnapshot(handle), false);
     assert.equal(shareImagePath(handle), '/recruiters-view/og/default.png');
     const link = new URL(sharePageUrl(handle));
-    assert.equal(link.pathname, '/result');
+    assert.equal(link.pathname, '/recruiters-view/result');
     assert.equal(link.searchParams.get('u'), handle);
   }
 });
@@ -85,7 +85,7 @@ test('built HTML gives crawlers personalized metadata without JavaScript', async
 });
 
 test('the base landing page has a dedicated general cover', async () => {
-  const html = (await read('dist/index.html')).toString();
+  const html = (await read('dist/recruiters-view/index.html')).toString();
   assert.equal(meta(html, 'og:image'), 'https://go.metix.ai/recruiters-view/og/default.png');
   assert.ok(!meta(html, 'og:title').includes('Maya'));
   assert.ok(html.includes('class="rv-hero"'));

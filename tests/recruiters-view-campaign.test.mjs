@@ -76,7 +76,7 @@ test('updated mock share links recreate their own snapshot, never the old person
   for (const result of [maya, refreshMockRanking(maya, new Date(now + RANK_INTERVAL_MS).toISOString())]) {
     const url = new URL(resultShareUrl(result));
     assert.equal(url.hostname, 'go.metix.ai');
-    if (hasMatchingShareSnapshot(result)) assert.equal(url.pathname, '/share/maya-chen-se');
+    if (hasMatchingShareSnapshot(result)) assert.equal(url.pathname, '/recruiters-view/share/maya-chen-se');
     else {
       assert.deepEqual(applySharedMockState(maya, url.searchParams), result);
       url.searchParams.set('location', 'Austin');

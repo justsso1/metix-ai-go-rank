@@ -1,3 +1,4 @@
+import { ROUTES } from '../src/recruiters-view/site.ts';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { stripTypeScriptTypes } from 'node:module';
@@ -12,15 +13,15 @@ async function environment({ hostname = 'go.metix.ai' } = {}) {
   const gaCalls = [];
   let timerId = 0;
   const window = {
-    location: { hostname, pathname: '/', origin: `https://${hostname}` },
+    location: { hostname, pathname: '/recruiters-view/', origin: `https://${hostname}` },
     gtag: (...args) => gaCalls.push(args),
     addEventListener(type, callback) { listeners.set(type, callback); },
     removeEventListener(type) { listeners.delete(type); },
     setTimeout(callback) { timers.set(++timerId, callback); return timerId; },
     clearTimeout(id) { timers.delete(id); },
   };
-  const context = vm.createContext({ window });
-  vm.runInContext(stripTypeScriptTypes(source).replaceAll('export ', '') + '\n globalThis.api = { trackCampaign: typeof trackCampaign === "function" ? trackCampaign : null, trackCampaignPage: typeof trackCampaignPage === "function" ? trackCampaignPage : null };', context);
+  const context = vm.createContext({ ROUTES, window });
+  vm.runInContext(stripTypeScriptTypes(source.replace("import { ROUTES } from './site.ts';", '')).replaceAll('export ', '') + '\n globalThis.api = { trackCampaign: typeof trackCampaign === "function" ? trackCampaign : null, trackCampaignPage: typeof trackCampaignPage === "function" ? trackCampaignPage : null };', context);
   return { context, window, calls, gaCalls, timers, listeners, api: context.api,
     ready() { window.metix = { ready: true, track: (...args) => calls.push(args) }; listeners.get('metix:ready')?.(); },
   };
@@ -46,8 +47,8 @@ test('dedupes scene views and sends only static canonical GA URLs', async () => 
   for (const scene of ['root', 'root', 'result', 'share', 'share', 'improve', 'opportunities', 'root']) env.api.trackCampaignPage(scene);
   assert.equal(env.calls.length, 6);
   assert.deepEqual(env.gaCalls.map(call => call[2].page_location), [
-    'https://go.metix.ai/', 'https://go.metix.ai/result', 'https://go.metix.ai/share/:handle',
-    'https://go.metix.ai/improve', 'https://go.metix.ai/opportunities', 'https://go.metix.ai/',
+    'https://go.metix.ai/recruiters-view/', 'https://go.metix.ai/recruiters-view/result', 'https://go.metix.ai/recruiters-view/share/:handle',
+    'https://go.metix.ai/recruiters-view/improve', 'https://go.metix.ai/recruiters-view/opportunities', 'https://go.metix.ai/recruiters-view/',
   ]);
   assert.equal(env.gaCalls[2][2].page_title, 'Metix Rank — share');
 });
@@ -104,11 +105,11 @@ test('real tracker startup plus React calls uploads one initial view and each tr
   assert.equal(env.window.metix.tracker.queue.length, 0);
   domListeners.get('DOMContentLoaded')();
   env.api.trackCampaignPage('root');
-  env.window.location.pathname = '/share/private-person';
+  env.window.location.pathname = '/recruiters-view/share/private-person';
   env.api.trackCampaignPage('share');
   env.api.trackCampaignPage('share');
   env.api.trackCampaign('share_copy', { method: 'link', profile: 'private-person' });
-  env.window.location.pathname = '/improve';
+  env.window.location.pathname = '/recruiters-view/improve';
   env.api.trackCampaignPage('improve');
   await env.window.metix.tracker.flush();
   assert.equal(requests.length, 1);

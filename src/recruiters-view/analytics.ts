@@ -1,3 +1,4 @@
+import { ROUTES } from './site.ts';
 export type CampaignScene = 'root' | 'result' | 'share' | 'improve' | 'opportunities';
 type SafeValue = string | number | boolean;
 type CampaignProperties = Record<string, SafeValue | undefined>;
@@ -7,7 +8,7 @@ type AnalyticsWindow = Window & {
 };
 
 const scenePaths: Record<CampaignScene, string> = {
-  root: '/', result: '/result', share: '/share/:handle', improve: '/improve', opportunities: '/opportunities',
+  root: ROUTES.entry, result: ROUTES.result, share: `${ROUTES.share}/:handle`, improve: ROUTES.improve, opportunities: ROUTES.opportunities,
 };
 const safeKeys = new Set([
   'scene', 'source', 'location', 'method', 'status', 'reason', 'result_type',

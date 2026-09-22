@@ -12,7 +12,7 @@ cp .env.example .env
 npm run dev
 ```
 
-Open http://127.0.0.1:4322/. Example: http://127.0.0.1:4322/share/maya-chen-se.
+Open http://127.0.0.1:4322/recruiters-view/. Example: http://127.0.0.1:4322/recruiters-view/share/maya-chen-se.
 
 ```sh
 npm run check        # production build + regression tests
@@ -22,8 +22,8 @@ npm run preview     # preview static build; API proxies require dev server or ng
 
 ## Routes
 
-`/`, `/result?u=...`, `/share/{seeded-handle}`, `/improve?u=...`, `/opportunities?u=...`.
-`/motion/` and `/motion-preview/` are noindex animation development tools with no production tracking. Only six seeded share pages are statically generated. Live/nonseeded results use `/result?u=...` and the generic OG cover. They are not immutable server snapshots.
+`/recruiters-view/`, `/recruiters-view/result?u=...`, `/recruiters-view/share/{seeded-handle}`, `/recruiters-view/improve?u=...`, `/recruiters-view/opportunities?u=...`. The domain root redirects to `/recruiters-view/`.
+`/recruiters-view/motion/` and `/recruiters-view/motion-preview/` are noindex animation development tools with no production tracking. Only six seeded share pages are statically generated. Live/nonseeded results use `/recruiters-view/result?u=...` and the generic OG cover. They are not immutable server snapshots.
 
 ## Services and environment
 

@@ -7,8 +7,8 @@ import { cardLayout, rankingCardSvg } from '../src/recruiters-view/ranking-card.
 
 const samples = getMockShareResults();
 test('entry, result and task addresses are distinct; legacy result links still resolve', () => {
-  assert.equal(campaignPage('/'), 'entry');
-  assert.equal(campaignPage('/', '?u=maya-chen-se'), 'result');
+  assert.equal(campaignPage('/recruiters-view/'), 'entry');
+  assert.equal(campaignPage('/recruiters-view/', '?u=maya-chen-se'), 'result');
   for (const result of samples) {
     for (const page of ['result','improve','opportunities']) {
       const url = new URL(campaignAddress(result, page), 'http://localhost');

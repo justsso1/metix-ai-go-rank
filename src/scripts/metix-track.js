@@ -294,16 +294,23 @@
     return normalized;
   }
 
+  const CAMPAIGN_BASE = "/recruiters-view";
+  function campaignSegments(pathname) {
+    const segments = (pathname || "/").split("/").filter(Boolean);
+    return segments[0] === "recruiters-view" ? segments.slice(1) : null;
+  }
+
   function sceneForPath(pathname) {
-    const segment = (pathname || "/").split("/").filter(Boolean)[0];
+    const segment = campaignSegments(pathname)?.[0];
     return Object.prototype.hasOwnProperty.call(PageId, segment) ? segment : "root";
   }
 
   function safePath(pathname) {
-    const segments = (pathname || "/").split("/").filter(Boolean);
-    if (!segments.length) return "/";
+    const segments = campaignSegments(pathname);
+    if (!segments) return "/:unknown";
+    if (!segments.length) return CAMPAIGN_BASE + "/";
     if (!Object.prototype.hasOwnProperty.call(PageId, segments[0])) return "/:unknown";
-    return "/" + segments[0] + (segments.length > 1 ? "/:handle" : "");
+    return CAMPAIGN_BASE + "/" + segments[0] + (segments.length > 1 ? "/:handle" : "");
   }
 
   // URLs can contain profile names, email addresses and queries. Retain only
@@ -524,10 +531,10 @@
     const props = {};
     try {
       props.path = activeScene && activeScene !== sceneForPath(window.location.pathname)
-        ? (activeScene === "root" ? "/" : "/" + activeScene)
+        ? (activeScene === "root" ? CAMPAIGN_BASE + "/" : CAMPAIGN_BASE + "/" + activeScene)
         : safePath(window.location.pathname);
     } catch (_) {
-      props.path = "/";
+      props.path = CAMPAIGN_BASE + "/";
     }
     props.campaign = "rank";
     props.scene = activeScene || sceneForPath(window.location.pathname);

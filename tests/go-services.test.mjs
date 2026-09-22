@@ -30,7 +30,7 @@ test('actual local HTTP proxy carries ranking requests and tracker batches', asy
   assert.equal(rank.status,200);assert.equal((await rank.json()).data.rank,47);
   const store=()=>({getItem:()=>null,setItem:()=>{}});
   const document={readyState:'complete',cookie:'',referrer:'',title:'Private Person',visibilityState:'visible',addEventListener(){},removeEventListener(){},querySelectorAll:()=>[]};
-  const window={document,location:{hostname:'go.metix.ai',pathname:'/share/private-person',href:'https://go.metix.ai/share/private-person?u=private-person'},sessionStorage:store(),localStorage:store(),setInterval:()=>1,clearInterval(){},addEventListener(){},removeEventListener(){},dispatchEvent(){},fetch:(path,options)=>fetch(endpoint+path,options)};
+  const window={document,location:{hostname:'go.metix.ai',pathname:'/recruiters-view/share/private-person',href:'https://go.metix.ai/recruiters-view/share/private-person?u=private-person'},sessionStorage:store(),localStorage:store(),setInterval:()=>1,clearInterval(){},addEventListener(){},removeEventListener(){},dispatchEvent(){},fetch:(path,options)=>fetch(endpoint+path,options)};
   const script=await readFile(new URL('../src/scripts/metix-track.js',import.meta.url),'utf8');
   vm.runInNewContext(script,{window,document,URL,URLSearchParams,console,CustomEvent:class {constructor(type){this.type=type;}}});
   window.metix.track('lookup_success',{result_type:'found'});
