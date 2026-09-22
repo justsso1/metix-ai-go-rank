@@ -1,0 +1,11 @@
+---
+export const prerender = true;
+import CampaignLayout from "../../recruiters-view/CampaignLayout.astro";
+import UnsubscribePage from "../../recruiters-view/UnsubscribePage";
+import { ROUTES } from "../../recruiters-view/site";
+---
+<CampaignLayout title="Unsubscribe · Metix AI" description="Unsubscribe from a Peer Rank email." path="/recruiters-view/unsubscribe" noindex={true}>
+  <main id="content" class="rv-page">
+    <UnsubscribePage client:load />
+  </main>
+</CampaignLayout>

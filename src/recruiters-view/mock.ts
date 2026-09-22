@@ -1,8 +1,6 @@
-import { SITE_ORIGIN as SHARE_ORIGIN, SITE_LABEL, ROUTES } from "./site.ts";
 import { completeTopThree } from './leaderboard.ts';
 import { PEOPLE_PER_PAGE, pluralRole, rankingCardStats } from './card-story.ts';
 import type {
-  ExampleLookup,
   LeaderboardSnapshot,
   LookupProgress,
   PeopleAboveGroups,
@@ -43,41 +41,6 @@ export const GENERIC_SUGGESTIONS = [
 
 export const HOW_CALCULATED =
   "Based on Metix's recruiter search index and the same ranking system used in Recruiter Search.";
-
-export const EXAMPLES: ExampleLookup[] = [
-  {
-    id: "maya-chen",
-    url: "https://www.linkedin.com/in/maya-chen-se",
-    label: "Maya Chen",
-    title: "Senior Backend Engineer",
-    location: "Seattle",
-    outcome: "found",
-  },
-  {
-    id: "jordan-hale",
-    url: "https://www.linkedin.com/in/jordan-hale-pm",
-    label: "Jordan Hale",
-    title: "Product Manager",
-    location: "New York",
-    outcome: "found",
-  },
-  {
-    id: "priya-nair",
-    url: "https://www.linkedin.com/in/priya-nair-ml",
-    label: "Priya Nair · Top 1%",
-    title: "Staff ML Engineer",
-    location: "San Francisco",
-    outcome: "found",
-  },
-  {
-    id: "not-indexed",
-    url: "https://www.linkedin.com/in/not-indexed",
-    label: "Not indexed yet",
-    title: "New public profile",
-    location: "Lag of 2 to 3 months",
-    outcome: "not_found",
-  },
-];
 
 const MAYA: RankProfile = {
   handle: "maya-chen-se",
@@ -123,7 +86,7 @@ const PRIYA: RankProfile = {
 
 const SEEDED: Record<string, RankLookupResult> = {
   "maya-chen-se": foundResult({
-    inputUrl: EXAMPLES[0].url,
+    inputUrl: "https://www.linkedin.com/in/maya-chen-se",
     profile: MAYA,
     query: {
       jobTitle: "Senior Backend Engineer",
@@ -148,7 +111,7 @@ const SEEDED: Record<string, RankLookupResult> = {
     },
   }),
   "jordan-hale-pm": foundResult({
-    inputUrl: EXAMPLES[1].url,
+    inputUrl: "https://www.linkedin.com/in/jordan-hale-pm",
     profile: JORDAN,
     query: {
       jobTitle: "Product Manager",
@@ -197,7 +160,7 @@ const SEEDED: Record<string, RankLookupResult> = {
   }),
   "not-indexed": {
     status: "not_found",
-    inputUrl: EXAMPLES[3].url,
+    inputUrl: "https://www.linkedin.com/in/not-indexed",
     handle: "not-indexed",
     suggestions: GENERIC_SUGGESTIONS,
   },
@@ -214,7 +177,6 @@ for (const [index, handle] of ["alex-romero-be", "nina-okonkwo-be", "kenji-mori-
   result.topThree = mayaSeed.topThree.map(person => person.rank === index + 1
     ? { ...person, id: `self-${handle}` } : person);
   SEEDED[handle] = result;
-  EXAMPLES.push({ id: handle, url: result.inputUrl, label: `${profile.fullName} · #${index + 1}`, title: profile.title, location: "Seattle", outcome: "found" });
 }
 
 const JOB_TEMPLATES: Array<{
@@ -271,33 +233,18 @@ export async function lookupRanking(
     return { status: "invalid", inputUrl: rawUrl, message: parsed.message };
   }
 
-  if (!isPreviewHandle(parsed.handle)) {
-    const { atlasEnabled, lookupAtlasRanking } = await import("./atlas.ts");
-    if (atlasEnabled()) {
-      return lookupAtlasRanking(parsed.url, parsed.handle, options);
-    }
-  }
+  const { lookupPeerRank } = await import("./peer-rank-api.ts");
+  return lookupPeerRank(parsed.url, parsed.handle, options);
+}
 
-  options.onProgress?.({ step: "profile" });
-  await wait(720, options.signal);
-
+/** Name-generation fixture for share-card tests. Campaign lookup does not use it. */
+export function syntheticLookup(rawUrl: string): RankLookupResult {
+  const parsed = parseLinkedInInput(rawUrl);
+  if (parsed.ok === false) return { status: "invalid", inputUrl: rawUrl, message: parsed.message };
   const seeded = Object.hasOwn(SEEDED, parsed.handle) ? SEEDED[parsed.handle] : undefined;
-  if (seeded?.status === "not_found") {
-    options.onProgress?.({ step: "query" });
-    await wait(420, options.signal);
-    return { ...seeded, inputUrl: parsed.url, handle: parsed.handle };
-  }
-
-  const result = seeded?.status === "found" ? { ...seeded, inputUrl: parsed.url } : synthesize(parsed.handle, parsed.url);
-
-  if (result.status === "found") {
-    options.onProgress?.({ step: "query", query: result.query });
-    await wait(640, options.signal);
-    options.onProgress?.({ step: "rank", query: result.query });
-    await wait(520, options.signal);
-  }
-
-  return result;
+  if (seeded?.status === "not_found") return { ...seeded, inputUrl: parsed.url, handle: parsed.handle };
+  if (seeded?.status === "found") return { ...seeded, inputUrl: parsed.url };
+  return synthesize(parsed.handle, parsed.url);
 }
 
 export function getLeaderboardSnapshot(now = Date.now()): LeaderboardSnapshot {
@@ -341,24 +288,8 @@ export function upgradeMockSnapshot(result: RankLookupFound): RankLookupFound {
   return { ...seeded, ...result, recruiterReplyScore: seeded.recruiterReplyScore };
 }
 
-export function hasShareSnapshot(handle: string): boolean {
-  return Object.hasOwn(SEEDED, handle) && SEEDED[handle].status === "found";
-}
-
-export function sharePageUrl(handle: string): string {
-  if (hasShareSnapshot(handle)) {
-    return `${SHARE_ORIGIN}${ROUTES.share}/${encodeURIComponent(handle)}`;
-  }
-  return `${SHARE_ORIGIN}${ROUTES.result}?u=${encodeURIComponent(handle)}`;
-}
-
-export function shareImagePath(handle?: string): string {
-  const key = handle && hasShareSnapshot(handle) ? handle : "default";
-  return `/recruiters-view/og/${key}.png`;
-}
-
 export function shareText(result: RankLookupFound): string {
-  const cta = `See where you stand → ${SITE_LABEL}`;
+  const cta = 'See where you stand →';
   const { ranking } = result;
   const { behind } = rankingCardStats(result);
   if (ranking.kind !== 'exact' || behind === null) return `I checked where I stand in recruiter search. ${cta}`;
@@ -540,30 +471,6 @@ function fnv(value: string): number {
   return hash >>> 0;
 }
 
-function wait(ms: number, signal?: AbortSignal): Promise<void> {
-  return new Promise((resolve, reject) => {
-    if (signal?.aborted) {
-      reject(new DOMException("Aborted", "AbortError"));
-      return;
-    }
-    const timer = globalThis.setTimeout(() => {
-      signal?.removeEventListener("abort", onAbort);
-      resolve();
-    }, ms);
-    const onAbort = () => {
-      globalThis.clearTimeout(timer);
-      reject(new DOMException("Aborted", "AbortError"));
-    };
-    signal?.addEventListener("abort", onAbort, { once: true });
-  });
-}
-
 export function topSearchFor(query: SearchQuery, skills: string[]): string {
   return `${query.jobTitle}s in ${query.location} with ${skills.slice(0, 2).join(" and ")} experience`;
-}
-
-/** Only an unchanged, published result can use a pre-rendered personal OG. */
-export function hasMatchingShareSnapshot(result: RankLookupFound): boolean {
-  const seeded = Object.hasOwn(SEEDED, result.profile.handle) ? SEEDED[result.profile.handle] : undefined;
-  return seeded?.status === "found" && JSON.stringify(seeded) === JSON.stringify(result);
 }

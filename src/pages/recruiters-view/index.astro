@@ -1,0 +1,15 @@
+---
+export const prerender = false;
+import RecruitersViewPage from '../../recruiters-view/RecruitersViewPage.astro';
+import { publicOriginForRequest } from '../../recruiters-view/public-origin.server';
+import { shareTaskPath } from '../../recruiters-view/site';
+const taskId = Astro.url.searchParams.get('taskId')?.trim();
+if (taskId) {
+  const redirect = Astro.redirect(shareTaskPath(taskId), 302);
+  redirect.headers.set('Cache-Control', 'private, no-store');
+  return redirect;
+}
+const hasTaskLink = Astro.url.searchParams.has('task_id') || Astro.url.searchParams.has('taskId');
+if (hasTaskLink) Astro.response.headers.set('Cache-Control', 'private, no-store');
+---
+<RecruitersViewPage page={hasTaskLink ? 'result' : 'entry'} origin={publicOriginForRequest(Astro.request)} />

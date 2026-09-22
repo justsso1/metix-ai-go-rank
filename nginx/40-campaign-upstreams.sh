@@ -3,7 +3,7 @@ set -eu
 output=/etc/nginx/campaign-upstreams.conf
 : > "$output"
 write_proxy() {
- route="$1"; upstream="$2"; strip="$3"
+ route="$1"; upstream="$2"; strip="$3"; prefix="${4:-}"
  if [ -z "$upstream" ]; then
   cat >> "$output" <<EOF
 location ^~ $route { default_type application/json; return 503 '{"msg":"Service upstream is not configured"}'; }
@@ -14,7 +14,9 @@ EOF
   echo "Invalid upstream origin for $route" >&2; exit 1
  fi
  upstream="${upstream%/}"
- [ "$strip" = yes ] && upstream="$upstream/"
+ if [ "$strip" = yes ]; then
+  upstream="$upstream$prefix/"
+ fi
  cat >> "$output" <<EOF
 location ^~ $route {
  proxy_pass $upstream;
@@ -31,5 +33,5 @@ location ^~ $route {
 }
 EOF
 }
-write_proxy /atlas/ "${ATLAS_UPSTREAM:-}" yes
-write_proxy /api/track/ "${TRACK_UPSTREAM:-}" no
+write_proxy /bapi/ "${NEXT_PUBLIC_API_BASE:-}" yes /hire/bapi
+write_proxy /api/track/ "${NEXT_PUBLIC_API_BASE:-}" yes /hire/api/track

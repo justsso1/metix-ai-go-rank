@@ -81,7 +81,7 @@ html:has(#recruiters-view-campaign) {
 .rv-page input::placeholder { color: var(--text-3); opacity: 1; }
 .rv-page ::selection { background: #c5b3ff; color: #20172d; }
 .rv-error, .rv-email-capture .rv-error { color: #ffb8af; }
-/* Entry: quiet typography above a raised composer, then lower-contrast examples. */
+/* Entry: quiet typography above a raised composer. */
 .rv-hero { padding-top: 72px; }
 .rv-hero h1 { color: #f3eef9; }
 .rv-hero h1 .em { color: #c5b7df; }
@@ -95,10 +95,9 @@ html:has(#recruiters-view-campaign) {
 }
 .rv-composer::before { display: none; }
 .rv-composer:focus-within { border-color: #c5b3ff; box-shadow: 0 0 0 3px #c5b3ff18, var(--rv-elevation); }
+.rv-page .rv-composer input:focus-visible { outline: none; }
 .rv-composer-row .btn { height: 48px; }
-.rv-examples-head h2, .rv-boards-head h2 { color: var(--text-2); }
-.rv-example { background: #23202c; border-color: var(--rv-line); }
-.rv-example:hover, .rv-example.is-on { background: #322b40; border-color: #88769f; }
+.rv-boards-head h2 { color: var(--text-2); }
 .rv-progress { border-color: var(--rv-line); }
 .rv-chip { color: var(--rv-chip-ink); background: var(--rv-chip); }
 .rv-chip.is-wait { color: transparent; background-image: linear-gradient(90deg, #312c3c, #41384e, #312c3c); }
@@ -199,6 +198,6 @@ html:has(#recruiters-view-campaign) {
   .rv-stage.is-result .rv-result { gap: 28px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .rv-page :is(.btn, .rv-example, .rv-share-channels a, .rv-share-channels button) { transition: none; }
+  .rv-page :is(.btn, .rv-share-channels a, .rv-share-channels button) { transition: none; }
   .rv-page .btn:hover { transform: none; }
 }

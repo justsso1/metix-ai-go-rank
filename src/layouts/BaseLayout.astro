@@ -1,17 +1,16 @@
 ---
-import Analytics from '../components/Analytics.astro';
 import { SITE_ORIGIN } from '../recruiters-view/site';
 import '../styles/base.css';
 interface Props {
  title: string; description: string; path: string; ogTitle?: string; ogDescription?: string;
  image?: string; imageAlt?: string; imageWidth?: number; imageHeight?: number;
- noindex?: boolean; bodyId?: string; showBanner?: boolean;
+ noindex?: boolean; bodyId?: string; showBanner?: boolean; origin?: string;
 }
 const {title, description, path, ogTitle=title, ogDescription=description,
- image='/recruiters-view/og/default.png', imageAlt=ogTitle, imageWidth=1200, imageHeight=630,
- noindex=true, bodyId='recruiters-view-campaign'} = Astro.props;
-const canonical=new URL(path,SITE_ORIGIN).href;
-const ogImage=new URL(image,SITE_ORIGIN).href;
+ image='/recruiters-view/og/default.jpg', imageAlt=ogTitle, imageWidth=1200, imageHeight=630,
+ noindex=true, bodyId='recruiters-view-campaign', origin=SITE_ORIGIN} = Astro.props;
+const canonical=new URL(path,origin).href;
+const ogImage=new URL(image,origin).href;
 ---
 <!doctype html>
 <html lang="en" style="color-scheme:light only">
@@ -28,7 +27,7 @@ const ogImage=new URL(image,SITE_ORIGIN).href;
   <meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content={ogTitle} />
   <meta name="twitter:description" content={ogDescription} /><meta name="twitter:image" content={ogImage} /><meta name="twitter:image:alt" content={imageAlt} />
   <link rel="icon" href="/favicon.ico" /><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" /><link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-  <Analytics /><slot name="head" />
+  <slot name="head" />
  </head>
  <body id={bodyId}><slot name="navigation" /><slot /><slot name="footer" />
   <script src="../scripts/metix-attribution.js"></script>

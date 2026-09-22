@@ -4,12 +4,13 @@ import RecruitersViewApp from './RecruitersViewApp';
 import { shareMetadata } from './share';
 import type { RankLookupFound } from './types';
 
-interface Props { result?: RankLookupFound; page?: 'entry' | 'result' | 'improve' | 'opportunities' }
-const { result, page = result ? 'result' : 'entry' } = Astro.props;
-const meta = shareMetadata(result);
+interface Props { result?: RankLookupFound; page?: 'entry' | 'result' | 'improve' | 'opportunities'; metadata?: ReturnType<typeof shareMetadata>; origin?: string }
+const { result, page = result ? 'result' : 'entry', metadata, origin } = Astro.props;
+const meta = metadata ?? shareMetadata();
 ---
 <CampaignLayout
-  title={result ? meta.title : 'See your Recruiter Search ranking · Metix AI'}
+  origin={origin}
+  title={metadata || result ? meta.title : 'See your Recruiter Search ranking · Metix AI'}
   description={meta.description}
   path={meta.path}
   ogTitle={meta.title}

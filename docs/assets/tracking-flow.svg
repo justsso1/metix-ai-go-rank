@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1560 660" role="img" aria-labelledby="title description">
+  <title id="title">Recruiter's View tracking flow</title>
+  <desc id="description">Page views and user actions become sanitized events, enter the BatchTracker queue, and are posted through a same-origin proxy to the collector on production and test hosts.</desc>
+  <defs>
+    <style>
+      .bg { fill: #151320; }
+      .panel { fill: #252231; stroke: #504963; stroke-width: 1.5; }
+      .panelAlt { fill: #302b40; stroke: #6e6384; stroke-width: 1.5; }
+      .text { fill: #f7f3ff; font: 600 22px Arial, sans-serif; }
+      .small { fill: #d9d1e8; font: 16px Arial, sans-serif; }
+      .tiny { fill: #c0b6d0; font: 14px Arial, sans-serif; }
+      .heading { fill: #f7f3ff; font: 700 34px Arial, sans-serif; }
+      .tag { fill: #d9cbff; font: 700 14px Arial, sans-serif; letter-spacing: 1.4px; }
+      .line { fill: none; stroke: #b89af4; stroke-width: 3; marker-end: url(#arrow); }
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1 1 L10 6 L1 11" fill="none" stroke="#b89af4" stroke-width="2" /></marker>
+  </defs>
+  <rect class="bg" width="1560" height="660" rx="24" />
+  <text class="heading" x="52" y="67">Recruiter's View tracking flow</text>
+  <text class="small" x="52" y="99">Production: go.metix.ai  ·  Test: go-dev.metix.ai</text>
+
+  <rect class="panel" x="52" y="140" width="285" height="176" rx="18" />
+  <text class="tag" x="78" y="171">PAGE VIEWS</text>
+  <text class="text" x="78" y="209">5 business scenes</text>
+  <text class="small" x="78" y="240">recruiters-view · result</text>
+  <text class="small" x="78" y="263">improve · opportunities</text>
+  <text class="small" x="78" y="286">unsubscribe</text>
+
+  <rect class="panel" x="52" y="330" width="285" height="186" rx="18" />
+  <text class="tag" x="78" y="361">USER ACTIONS</text>
+  <text class="text" x="78" y="399">Buttons and links</text>
+  <text class="small" x="78" y="430">lookup · navigate · share</text>
+  <text class="small" x="78" y="455">email · jobs · unsubscribe</text>
+  <text class="tiny" x="78" y="489">Click and outcome are separate</text>
+
+  <path class="line" d="M337 220 H390 V300 H426" />
+  <path class="line" d="M337 425 H390 V355 H426" />
+
+  <rect class="panelAlt" x="426" y="242" width="300" height="198" rx="18" />
+  <text class="tag" x="452" y="273">CLIENT MAPPING</text>
+  <text class="text" x="452" y="310">trackCampaign</text>
+  <text class="small" x="452" y="340">+ data-track clicks</text>
+  <text class="small" x="452" y="374">pageId · eventType · name</text>
+  <text class="tiny" x="452" y="406">categorical fields only; safe path</text>
+
+  <path class="line" d="M726 340 H776" />
+
+  <rect class="panelAlt" x="778" y="242" width="300" height="198" rx="18" />
+  <text class="tag" x="804" y="273">BATCHTRACKER</text>
+  <text class="text" x="804" y="310">Queue and flush</text>
+  <text class="small" x="804" y="341">5 events · 30 seconds</text>
+  <text class="small" x="804" y="374">hidden / unload / key CTA</text>
+  <text class="tiny" x="804" y="406">best effort; no retry</text>
+
+  <path class="line" d="M1078 340 H1128" />
+
+  <rect class="panel" x="1130" y="242" width="377" height="198" rx="18" />
+  <text class="tag" x="1156" y="273">SAME-ORIGIN DELIVERY</text>
+  <text class="small" x="1156" y="310">anonymous or authenticated collect</text>
+  <text class="small" x="1156" y="342">nginx → /hire/api/track/</text>
+  <text class="small" x="1156" y="374">collector → reporting</text>
+  <text class="tiny" x="1156" y="406">upstream configured per environment</text>
+
+  <text class="tiny" x="52" y="569">Excluded: local/other hosts, 404, social-crawler OG responses, marked-share redirects</text>
+  <text class="tiny" x="52" y="598">No raw LinkedIn URL, email, taskId, unsubscribe token, profile text, or error message in business event properties.</text>
+  <text class="tiny" x="52" y="625">A client send does not prove collector ingestion; verify both deployments at the collector.</text>
+</svg>

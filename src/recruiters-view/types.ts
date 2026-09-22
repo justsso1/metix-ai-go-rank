@@ -75,6 +75,10 @@ export type RankLookupFound = {
   /** Optional algorithm-supplied rows for the scrolling reveal. Missing rows use neutral placeholders. */
   rankingEntries?: RankedPerson[];
   jobs?: MatchedJob[];
+  ogImageUrl?: string;
+  ogImageWidth?: number;
+  ogImageHeight?: number;
+  taskId?: string;
 };
 
 export type RankLookupNotFound = {
@@ -90,22 +94,19 @@ export type RankLookupInvalid = {
   message: string;
 };
 
-export type RankLookupResult = RankLookupFound | RankLookupNotFound | RankLookupInvalid;
+export type RankLookupUnavailable = {
+  status: "unavailable";
+  inputUrl: string;
+  message: string;
+};
+
+export type RankLookupResult = RankLookupFound | RankLookupNotFound | RankLookupInvalid | RankLookupUnavailable;
 
 export type LookupStep = "profile" | "query" | "rank";
 
 export type LookupProgress = {
   step: LookupStep;
   query?: SearchQuery;
-};
-
-export type ExampleLookup = {
-  id: string;
-  url: string;
-  label: string;
-  title: string;
-  location: string;
-  outcome: "found" | "not_found";
 };
 
 export type LeaderboardRole = {

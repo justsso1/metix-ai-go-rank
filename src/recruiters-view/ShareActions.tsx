@@ -15,8 +15,8 @@ const ShareX = createLucideIcon('ShareX', [
 const shareIconProps = { className: 'rv-share-icon', size: 16, strokeWidth: 1.75, 'aria-hidden': true } as const;
 
 export default function ShareActions({ result, width, prepareImage = true }: { result: RankLookupFound; width: number; prepareImage?: boolean }) {
-  const [image, setImage] = useState(''), [error, setError] = useState(''), [copied, setCopied] = useState(false), [retry, setRetry] = useState(0);
-  const identity = rankingIdentity(result), link = resultShareUrl(result), post = shareText(result);
+  const [image, setImage] = useState(''), [error, setError] = useState(''), [copied, setCopied] = useState(false), [retry, setRetry] = useState(0), [shareUrl, setShareUrl] = useState('');
+  const identity = rankingIdentity(result), post = shareText(result);
   const primary = cardStory(result).primaryAction;
   const comparisonKey = JSON.stringify(result.previousRanking);
   useEffect(() => {
@@ -30,17 +30,21 @@ export default function ShareActions({ result, width, prepareImage = true }: { r
     }, 150);
     return () => { cancelled = true; window.clearTimeout(timer); if (objectUrl) URL.revokeObjectURL(objectUrl); };
   }, [identity, result.recruiterReplyScore, comparisonKey, width, retry, prepareImage]);
+  useEffect(() => {
+    setShareUrl(resultShareUrl(result, window.location.origin));
+  }, [identity, result.taskId, result.revision, result.rankedAt]);
   useEffect(() => { if (copied) { const timer = window.setTimeout(() => setCopied(false), 2400); return () => clearTimeout(timer); } }, [copied]);
   async function copy() {
-    try { await navigator.clipboard.writeText(post); setCopied(true); setError(''); trackCampaign('share', { channel: 'copy' }); }
+    if (!shareUrl) return;
+    try { await navigator.clipboard.writeText(shareUrl); setCopied(true); setError(''); trackCampaign('share', { channel: 'copy' }); }
     catch { setError('Could not copy the share text. Please try again.'); }
   }
   return <div className={`rv-share-actions is-${primary}-primary`} data-theme={cardThemeName(result.ranking)} aria-label="Share your ranking">
     <div className="rv-share-channels">
-      <a onClick={() => trackCampaign("share", { channel: "x" })} href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post)}`} target="_blank" rel="noopener noreferrer"><ShareX {...shareIconProps} />Share on X</a>
-      <a onClick={() => trackCampaign("share", { channel: "linkedin" })} href={linkedinShareUrl(post, link)} target="_blank" rel="noopener noreferrer"><Linkedin {...shareIconProps} />LinkedIn</a>
-      <button type="button" onClick={copy}>{copied ? <Check {...shareIconProps} /> : <Link2 {...shareIconProps} />}{copied ? 'Copied' : 'Copy link'}</button>
-      {image ? <a onClick={() => trackCampaign("card_download", { format: "png" })} href={image} download={`metix-ranking-${result.profile.handle}.png`}><Download {...shareIconProps} />Download card</a> : <button type="button" disabled={!error} onClick={() => setRetry(value=>value+1)}><Download {...shareIconProps} />{error ? 'Retry download' : 'Preparing…'}</button>}
+      <a aria-disabled={!shareUrl} onClick={event => { if (!shareUrl) event.preventDefault(); else trackCampaign("share", { channel: "x" }); }} href={shareUrl ? `https://twitter.com/intent/tweet?text=${encodeURIComponent(post)}&url=${encodeURIComponent(shareUrl)}` : undefined} target="_blank" rel="noopener noreferrer"><ShareX {...shareIconProps} />Share on X</a>
+      <a aria-disabled={!shareUrl} onClick={event => { if (!shareUrl) event.preventDefault(); else trackCampaign("share", { channel: "linkedin" }); }} href={shareUrl ? linkedinShareUrl(post, shareUrl) : undefined} target="_blank" rel="noopener noreferrer"><Linkedin {...shareIconProps} />LinkedIn</a>
+      <button type="button" disabled={!shareUrl} data-track="share_copy_attempt" data-track-location="share" onClick={copy}>{copied ? <Check {...shareIconProps} /> : <Link2 {...shareIconProps} />}{copied ? 'Copied' : 'Copy link'}</button>
+      {image ? <a onClick={() => trackCampaign("card_download", { format: "png" })} href={image} download={`metix-ranking-${result.profile.handle}.png`}><Download {...shareIconProps} />Download card</a> : <button type="button" disabled={!error} data-track="card_download_retry" data-track-location="share" onClick={() => setRetry(value=>value+1)}><Download {...shareIconProps} />{error ? 'Retry download' : 'Preparing…'}</button>}
     </div>
     <span className="rv-sr-only" role="status">{copied ? 'Share text copied.' : ''}</span>
     {error && <p className="rv-share-error" role="alert">{error}</p>}

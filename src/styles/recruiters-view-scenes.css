@@ -40,15 +40,29 @@
 .is-revealing .rv-art-details { animation: rv-detail-in .3s .65s both ease-out; }
 .rv-card-with-actions > .rv-mobile-improve { margin-top: 16px; }
 .rv-route-loading { min-height: 60vh; display: grid; align-content: center; justify-content: center; padding: 40px 24px; }
+.rv-route-loading button.rv-return { border: 0; background: none; cursor: pointer; font-family: inherit; }
 .rv-missing-page { min-height: calc(100dvh - 72px); padding: 32px 0 80px; }
 .rv-missing-page > .wrap { max-width: 760px; }
+.rv-unsubscribe-page { display: grid; align-items: center; padding: 56px 24px 80px; }
+.rv-unsubscribe-page > .wrap { width: 100%; max-width: 560px; }
+.rv-unsubscribe-content { text-align: center; }
+.rv-unsubscribe-title { margin: 0; color: var(--text-strong); font: 500 clamp(27px, 4vw, 32px)/1.25 var(--display); letter-spacing: -.03em; }
+.rv-unsubscribe-title:focus { outline: none; }
+.rv-unsubscribe-copy { margin: 14px 0 0; color: var(--text-2); font-size: 15px; line-height: 1.6; }
+.rv-unsubscribe-form { margin-top: 28px; }
+.rv-unsubscribe-actions { display: flex; justify-content: center; gap: 12px; }
+.rv-unsubscribe-actions .btn, .rv-unsubscribe-home { justify-content: center; min-width: 152px; text-decoration: none; }
+.rv-unsubscribe-content .rv-error { margin: 16px 0 0; color: #ffb8af; text-align: center; }
+.rv-unsubscribe-home { margin-top: 28px; }
+@media (max-width: 520px) {
+  .rv-unsubscribe-page { padding: 48px 18px 64px; }
+  .rv-unsubscribe-actions { flex-direction: column; align-items: center; }
+  .rv-unsubscribe-actions .btn { width: min(100%, 280px); }
+}
 .rv-miss-card .rv-missing-title { font: 450 clamp(26px, 4vw, 34px)/1.25 var(--display); letter-spacing: -.025em; margin: 20px 0 12px; }
 .rv-missing-title:focus { outline: none; }
 .rv-missing-url { color: var(--text-2); font-size: 13px; overflow-wrap: anywhere; margin-bottom: 24px; }
-.rv-index-notification .rv-email-heading { align-items: start; }
-.rv-index-notification .rv-email-heading h2 { font: 550 15px/1.5 var(--sans); margin: 0; }
-.rv-index-notification .rv-email-heading svg, .rv-index-notification .rv-success svg { flex: none; margin-top: 2px; }
-.rv-index-notification .rv-success { align-items: start; }
+.rv-missing-message { color: var(--text-2); font-size: 15px; line-height: 1.6; }
 .rv-page section.rv-stage.is-task { padding: 0; background: #f7f6f9; }
 .rv-task-page { min-height: calc(100dvh - 72px); padding: 28px 0 80px; background: #f7f6f9; }
 .rv-task-page > .wrap { max-width: 1192px; }

@@ -1,4 +1,4 @@
 ---
-import RecruitersViewPage from '../recruiters-view/RecruitersViewPage.astro';
+export const prerender = true;
+return Astro.redirect('/recruiters-view/' + Astro.url.search, 302);
 ---
-<RecruitersViewPage />

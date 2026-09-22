@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import { CARD_THEMES, cardThemeName } from './card-theme';
 import { formatRankingTime, showsJobMatches, scopeLabel, topPercent } from './campaign';
 import { campaignAddress } from './routes';
+import { trackCampaign } from './analytics';
 import { HOW_CALCULATED } from './mock';
 import { hasSeenRanking, leaderboardRankWidth, leaderboardRows, ownRankedPerson, rankingIdentity, rememberRanking } from './leaderboard';
 import { cardLayout, rankingCardSvg } from './ranking-card';
@@ -136,14 +137,14 @@ export default function ResultStage({ result, reveal, ready, updated = false, on
         </ol>
         <footer className="rv-board-footer">
           <p className="rv-rank-updated">Ranking updated <time dateTime={result.rankedAt}>{formatRankingTime(result.rankedAt)}</time></p>
-          <details className="rv-calc"><summary>How is this calculated?</summary><p>{HOW_CALCULATED}</p></details>
+          <details className="rv-calc"><summary data-track="calculation_details" data-track-location="result">How is this calculated?</summary><p>{HOW_CALCULATED}</p></details>
         </footer>
       </article>
       {expanded && <motion.div ref={card} className={`rv-detail-shell ${expanding ? 'is-revealing' : ''} ${phase === 'update' ? 'is-updating' : ''}`} layoutId="ranking-card" transition={reduced ? { duration: 0 } : layoutTransition} style={{ borderRadius: 20 }}>
         <RankingCard result={result} interactive={phase === 'settled' && !presenting} shared={expanding} reveal={expanding} share prepareImage={!presenting} />
         {showsJobMatches(result) && <div className="rv-opportunity-entry">
           <h2>Where could your experience take you?</h2>
-          <a className="rv-opportunity-link" href={campaignAddress(result, 'opportunities')} onClick={event => { if (onExplore && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); onExplore(); } }}>Explore opportunities <ArrowRight size={14} /></a>
+          <a className="rv-opportunity-link" href={campaignAddress(result, 'opportunities')} onClick={event => { if (onExplore && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) { event.preventDefault(); onExplore(); } else trackCampaign('navigate', { destination: 'opportunities' }); }}>Explore opportunities <ArrowRight size={14} /></a>
         </div>}
       </motion.div>}
     </div>

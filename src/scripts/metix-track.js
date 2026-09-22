@@ -3,19 +3,14 @@
    React/Next to this Astro static site as plain JS.
 
    One sink, driven by one track() call:
-     BatchTracker — queues SPMID-style events and POSTs them in batches to the
-     same-origin collection API (/api/track/collect/batch). Mirrors the
+     BatchTracker — queues SPMID-style events and POSTs them to the
+     same-origin collection API. Anonymous visitors use the anonymous single
+     event endpoint; visitors with an access token use the batch endpoint. Mirrors the
      reference config (maxBatchSize / flushInterval / sampleRate) and flush
      triggers (interval, queue full, page hide, page unload).
 
-   Events are deliberately NOT forwarded to Microsoft Clarity. Clarity keeps its
-   own native session recording (wired in BaseLayout), but mirroring our custom
-   events/tags there would explode Clarity's event/tag cardinality (page-specific
-   eventIds + high-cardinality values like URLs / referrers). Clarity stays
-   recording-only; structured analytics live in the backend sink.
-
-   Network sends only reach out on go.metix.ai.
-   Local/preview builds queue-and-drop. Marketing attribution from
+   Network sends only reach out on go.metix.ai and go-dev.metix.ai.
+   Local/other preview builds queue-and-drop. Marketing attribution from
    metix-attribution.js is merged onto every event. Tracking is best-effort and
    must never block or break the page. */
 (function () {
@@ -23,7 +18,7 @@
 
   /* ------------------------------------------------------------------ config */
 
-  const BUSINESS_ID = "homepage"; // BusinessId.HOMEPAGE
+  const BUSINESS_ID = "go-rank";
   const API = {
     collect: "/api/track/collect",
     batch: "/api/track/collect/batch",
@@ -31,7 +26,7 @@
   };
   // Matches TrackerProvider's live configuration (not BatchTracker's raw defaults).
   const DEFAULTS = { maxBatchSize: 5, flushInterval: 30000, sampleRate: 1 };
-  const TRACK_ENABLED_HOSTS = ["go.metix.ai"];
+  const TRACK_ENABLED_HOSTS = ["go.metix.ai", "go-dev.metix.ai"];
 
   const AUTH_TOKEN_COOKIE = "metix_auth_at"; // AUTH_COOKIE_NAME_ACCESS_TOKEN
   const AUTH_REFRESH_COOKIE = "metix_auth_rt";
@@ -84,11 +79,11 @@
     error: "error",
   });
   const PageId = Object.freeze({
-    root: "go-rank-root",
-    result: "go-rank-result",
-    share: "go-rank-share",
-    improve: "go-rank-improve",
-    opportunities: "go-rank-opportunities",
+    root: "recruiters-view",
+    result: "result",
+    improve: "improve",
+    opportunities: "opportunities",
+    unsubscribe: "unsubscribe",
   });
   let activeScene = null;
   let lastPageId = null;
@@ -100,6 +95,12 @@
     job_list: "job-list",
     job_list_apply: "job-list-apply",
     content: "content",
+    lookup: "lookup",
+    result: "result",
+    share: "share",
+    improve: "improve",
+    opportunities: "opportunities",
+    unsubscribe: "unsubscribe",
   });
 
   /* ----------------------------------------------------------------- helpers */
@@ -294,16 +295,36 @@
     return normalized;
   }
 
+  const CAMPAIGN_BASE = "/recruiters-view";
+  const SHARE_TASK_PATH = /^\/share\/[^/]+\/?$/;
+  function campaignSegments(pathname) {
+    const segments = (pathname || "/").split("/").filter(Boolean);
+    return segments[0] === "recruiters-view" ? segments.slice(1) : null;
+  }
+
   function sceneForPath(pathname) {
-    const segment = (pathname || "/").split("/").filter(Boolean)[0];
-    return Object.prototype.hasOwnProperty.call(PageId, segment) ? segment : "root";
+    if (SHARE_TASK_PATH.test(pathname)) return "result";
+    if (/^\/unsubscribe\/?$/.test(pathname)) return "unsubscribe";
+    const segments = campaignSegments(pathname);
+    if (!segments) return null;
+    const segment = segments[0];
+    if (!segment) {
+      const query = new URLSearchParams(window.location.search);
+      return query.has("task_id") || query.has("taskId") || query.has("u") ? "result" : "root";
+    }
+    if (segment === "share") return "result";
+    return Object.prototype.hasOwnProperty.call(PageId, segment) ? segment : null;
   }
 
   function safePath(pathname) {
-    const segments = (pathname || "/").split("/").filter(Boolean);
-    if (!segments.length) return "/";
+    if (SHARE_TASK_PATH.test(pathname)) return "/share/:taskId";
+    if (/^\/unsubscribe\/?$/.test(pathname)) return "/unsubscribe";
+    const segments = campaignSegments(pathname);
+    if (!segments) return "/:unknown";
+    if (!segments.length) return CAMPAIGN_BASE + "/";
+    if (segments[0] === "share") return CAMPAIGN_BASE + "/share";
     if (!Object.prototype.hasOwnProperty.call(PageId, segments[0])) return "/:unknown";
-    return "/" + segments[0] + (segments.length > 1 ? "/:handle" : "");
+    return CAMPAIGN_BASE + "/" + segments[0] + (segments.length > 1 ? "/:handle" : "");
   }
 
   // URLs can contain profile names, email addresses and queries. Retain only
@@ -323,17 +344,17 @@
   }
 
   function detectPageId() {
-    return PageId[activeScene || sceneForPath(window.location.pathname)];
+    const scene = activeScene || sceneForPath(window.location.pathname);
+    return scene ? PageId[scene] : null;
   }
 
   /* ------------------------------------------------- backend collection layer */
 
-  function post(url, payload, keepalive) {
+  function post(url, payload, keepalive, token) {
     try {
       if (!isTrackEnabledHost()) return; // backend only exists behind allowed-host ingress
       const body = JSON.stringify(payload);
       const headers = { "Content-Type": "application/json" };
-      const token = getAuthToken();
       if (token) headers.Authorization = "Bearer " + token;
       return window
         .fetch(url, {
@@ -352,6 +373,30 @@
     }
   }
 
+  function postAnonymous(event, keepalive) {
+    const anonymous = Object.assign({}, event);
+    delete anonymous.userId;
+    return post(API.anonymous, anonymous, keepalive);
+  }
+
+  function sendQueued(events, keepalive) {
+    const token = getAuthToken();
+    if (!token) {
+      return Promise.all(events.map(function (event) {
+        return postAnonymous(event, keepalive);
+      }));
+    }
+    return Promise.resolve(post(API.batch, { batchTrackEventList: events }, keepalive, token))
+      .then(function (response) {
+        // An expired shared auth cookie must not discard public-page events.
+        if (response && (response.status === 401 || response.status === 403)) {
+          return Promise.all(events.map(function (event) {
+            return postAnonymous(event, keepalive);
+          }));
+        }
+      });
+  }
+
   /* --------------------------------------------------------------- BatchTracker */
 
   function BatchTracker(options) {
@@ -360,7 +405,7 @@
     this.timer = null;
     this.maxBatchSize = options.maxBatchSize || DEFAULTS.maxBatchSize;
     this.flushInterval = options.flushInterval || DEFAULTS.flushInterval;
-    this.businessId = options.businessId || BUSINESS_ID;
+    this.businessId = BUSINESS_ID;
     const sampling = getSamplingDecision(
       options.sampleRate == null ? DEFAULTS.sampleRate : options.sampleRate,
     );
@@ -429,16 +474,20 @@
   };
 
   BatchTracker.prototype.trackOnce = function (event) {
-    post(
-      API.collect,
-      Object.assign({}, event, { timestamp: Date.now(), businessId: this.businessId }),
-    );
+    const enriched = Object.assign({}, event, { timestamp: Date.now(), businessId: this.businessId });
+    const token = getAuthToken();
+    if (!token) return postAnonymous(enriched, false);
+    return Promise.resolve(post(API.collect, enriched, false, token)).then(function (response) {
+      if (response && (response.status === 401 || response.status === 403)) {
+        return postAnonymous(enriched, false);
+      }
+    });
   };
 
   BatchTracker.prototype.trackOnceAnonymous = function (event) {
-    post(
-      API.anonymous,
+    return postAnonymous(
       Object.assign({}, event, { timestamp: Date.now(), businessId: this.businessId }),
+      false,
     );
   };
 
@@ -451,9 +500,7 @@
       if (force === true && this.queue.length > 0) {
         const forcedQueue = this.queue.slice();
         this.queue = [];
-        return Promise.resolve(
-          post(API.batch, { batchTrackEventList: forcedQueue }, true),
-        );
+        return Promise.resolve(sendQueued(forcedQueue, true));
       }
       return Promise.resolve();
     }
@@ -466,7 +513,7 @@
     this.queue = [];
 
     const self = this;
-    return Promise.resolve(post(API.batch, { batchTrackEventList: queueToSend }, force === true))
+    return Promise.resolve(sendQueued(queueToSend, force === true))
       .catch(function () {
         // On failure we intentionally do NOT re-queue — infinite retries would
         // leak memory. Events are best-effort.
@@ -520,17 +567,19 @@
     })(),
   );
 
-  function baseProperties(extra) {
+  function baseProperties(extra, eventName) {
     const props = {};
     try {
       props.path = activeScene && activeScene !== sceneForPath(window.location.pathname)
-        ? (activeScene === "root" ? "/" : "/" + activeScene)
+        ? (activeScene === "root" ? CAMPAIGN_BASE + "/" : CAMPAIGN_BASE + "/" + activeScene)
         : safePath(window.location.pathname);
     } catch (_) {
-      props.path = "/";
+      props.path = CAMPAIGN_BASE + "/";
     }
     props.campaign = "rank";
-    props.scene = activeScene || sceneForPath(window.location.pathname);
+    const scene = activeScene || sceneForPath(window.location.pathname);
+    props.scene = scene === "root" ? PageId.root : scene;
+    props.event_name = eventName;
     props.is_logged_in = isLoggedIn() ? "true" : "false";
     const visitorId = getVisitorId();
     if (visitorId) props.visitor_id = visitorId;
@@ -554,25 +603,31 @@
     return props;
   }
 
-  function eventIdFor(pageId, positionId, name) {
-    return tracker.businessId + "." + pageId + "." + positionId + "." + name;
+  function eventNameFor(pageId, name, eventType) {
+    const action = String(name).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    const type = String(eventType).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    const event = action && type && action !== type ? action + "-" + type : action || type || "custom";
+    const prefix = BUSINESS_ID + "." + pageId + ".";
+    return prefix + event.slice(0, MAX_EVENT_NAME_LENGTH - prefix.length).replace(/-$/, "");
   }
 
   // Accepts either a string event name or a partial TrackEventReq object and
   // returns a normalized backend event.
   function toEvent(input, props) {
     const pageId = detectPageId();
+    if (!pageId) return null;
 
     if (typeof input === "string") {
       const name = normalizeName(input);
       if (!name) return null;
       const eventType = EventType[name] ? name : EventType.custom;
+      const eventName = eventNameFor(pageId, name, eventType);
       return {
-        eventId: eventIdFor(pageId, PositionId.page, name),
+        eventId: eventName,
         pageId: pageId,
         positionId: PositionId.page,
         eventType: eventType,
-        properties: baseProperties(props),
+        properties: baseProperties(props, eventName),
       };
     }
 
@@ -582,12 +637,13 @@
           ? input.eventType
           : EventType.custom;
       const shortName = normalizeName(input.name) || eventType;
+      const eventName = eventNameFor(pageId, shortName, eventType);
       const event = {
-        eventId: eventIdFor(pageId, PositionId.page, shortName),
+        eventId: eventName,
         pageId: pageId,
         positionId: PositionId.page,
         eventType: eventType,
-        properties: baseProperties(input.properties),
+        properties: baseProperties(input.properties, eventName),
       };
       if (input.moduleId) event.moduleId = input.moduleId;
       return event;
@@ -612,9 +668,6 @@
       const event = toEvent(input, props);
       if (!event) return;
       tracker.track(event, forceFlush === true); // → backend batch (the only sink)
-      // NOTE: events are deliberately NOT forwarded to Microsoft Clarity — see the
-      // file header. Clarity keeps its own native session recording; mirroring our
-      // custom events/tags there would explode Clarity's event/tag cardinality.
     } catch (_) {
       // Tracking is best-effort and must never throw into caller code.
     }
@@ -663,7 +716,7 @@
       if (!a.hostname) return;
       const linkHost = a.hostname.toLowerCase();
       const pageHost = window.location.hostname.toLowerCase();
-      const metixHosts = ["go.metix.ai", "metix.ai", "www.metix.ai"];
+      const metixHosts = ["go.metix.ai", "go-dev.metix.ai", "metix.ai", "www.metix.ai"];
       if (
         linkHost === pageHost ||
         (metixHosts.indexOf(linkHost) !== -1 &&

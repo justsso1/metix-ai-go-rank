@@ -131,7 +131,7 @@ export default function RankingJourney({ result, onComplete, onCancel, playback 
       <p className="rv-rank-kicker">RECRUITER'S VIEW</p><h1>{caption}</h1>
     </header>
     <div className="rv-journey-live rv-sr-only" role="status" aria-live="polite">{caption}</div>
-    {!result && <button type="button" className="rv-journey-cancel" onClick={onCancel}>Cancel search</button>}
+    {!result && <button type="button" className="rv-journey-cancel" data-track="cancel_search" data-track-location="lookup" onClick={onCancel}>Cancel search</button>}
     <div className="rv-journey-scene" aria-hidden="true">
       {!reduced && time < 5.5 && Array.from({ length: 24 }, (_, index) => !PICKED.includes(index) && <div key={index} className="rv-journey-document is-pool" style={{ ...poseStyle(project(gridPose(index, mobile))), opacity: (.45 - ease((time - 2.45) / 1.8) * .4) * (1 - ease((time - 4.35) / 1)), translate: `0 ${ease((time - 2.3) / 2.5) * 18}px` }}><ResumeInterior id={index % 6} time={0} width={gridPose(index, mobile).w * unit} height={gridPose(index, mobile).h * unit} morph={0} unit={unit} /></div>)}
       {destination && <div className="rv-journey-board-back" style={{ ...poseStyle({ ...destination.board, h: mix(Math.max(destination.board.h, destination.first.y - destination.board.y + destination.pitch * 5 + destination.first.h + 24), destination.board.h, collapse) }), opacity: ease((reveal - .45) / .6) }}><h3>The leaderboard</h3><p>{result ? scopeLabel(result.query) : ''}</p></div>}

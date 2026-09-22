@@ -2,7 +2,7 @@ import { trackCampaign } from './analytics';
 import { type FormEvent, useEffect, useRef, useState } from 'react';
 import { ArrowUpRight, Check, ChevronDown, Mail } from 'lucide-react';
 import {
-  CONTACT_KEY, initialCampaign, readCampaign,
+  CONTACT_KEY, initialCampaign,
 } from './campaign';
 import type { RankLookupFound } from './types';
 import { readRankingUpdate, submitRankingUpdate, validRankingUpdateEmail, type RankingUpdateRequest } from './ranking-update';
@@ -12,8 +12,7 @@ export function useCampaign(initial: RankLookupFound, onResult: (result: RankLoo
   const [email, setEmail] = useState('');
   const [ready, setReady] = useState(false);
   useEffect(() => {
-    // Explicit shared snapshots take precedence over a viewer's saved demo.
-    setState(new URLSearchParams(location.search).get('resume') === '1' ? readCampaign(initial) : initialCampaign(initial));
+    setState(initialCampaign(initial));
     try { setEmail(localStorage.getItem(CONTACT_KEY) || ''); } catch { /* Optional persistence. */ }
     setReady(true);
   }, []);
@@ -55,17 +54,20 @@ export function ProfileImprovements({ result, email, saveEmail }: {
       emailInput.current?.focus();
       return;
     }
-    trackCampaign("email_request", { source: "ranking_update", status: "submit", mode: "local_preview" });
+    trackCampaign("email_request", { source: "ranking_update", status: "submit" });
     const controller = new AbortController();
     submission.current = controller;
     setSubmitting(true); setError(''); setDraft(value);
     try {
-      const saved = await submitRankingUpdate(result.profile.handle, value, { signal: controller.signal });
+      const saved = await submitRankingUpdate(result.profile.handle, value, { signal: controller.signal, linkedinUrl: result.inputUrl });
       if (controller.signal.aborted) return;
-      setRequest(saved); trackCampaign("email_request", { source: "ranking_update", status: "saved", mode: "local_preview" });
+      setRequest(saved); trackCampaign("email_request", { source: "ranking_update", status: "saved" });
       saveEmail(saved.email);
     } catch (err) {
-      if ((err as Error).name !== 'AbortError') setError('We couldn’t save your request. Please try again.');
+      if ((err as Error).name !== 'AbortError') {
+        setError((err as Error).message || 'We couldn’t save your request. Please try again.');
+        trackCampaign("email_request", { source: "ranking_update", status: "error" });
+      }
     } finally {
       if (!controller.signal.aborted) { setSubmitting(false); submission.current = null; }
     }
@@ -80,10 +82,10 @@ export function ProfileImprovements({ result, email, saveEmail }: {
       const body = split > 0 ? suggestion.slice(split + 3) : suggestion;
       return <li key={suggestion}>
         <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
-        <details><summary>{title}<ChevronDown size={16} aria-hidden="true" /></summary><p>{body}</p></details>
+        <details><summary data-track="checklist_detail" data-track-location="improve" data-track-item-index={index + 1}>{title}<ChevronDown size={16} aria-hidden="true" /></summary><p>{body}</p></details>
       </li>;
     })}</ol>
-    <a className="rv-profile-edit-link" href={result.inputUrl} target="_blank" rel="noopener noreferrer">Edit LinkedIn profile <ArrowUpRight size={15} aria-hidden="true" /></a>
+    <a className="rv-profile-edit-link" href={result.inputUrl} target="_blank" rel="noopener noreferrer" data-track="edit_profile" data-track-location="improve">Edit LinkedIn profile <ArrowUpRight size={15} aria-hidden="true" /></a>
 
     <div className="rv-email-capture rv-ranking-update-form" aria-busy={submitting}>
       <div className="rv-email-heading"><Mail size={18} aria-hidden="true" /><h3>Recheck your ranking</h3></div>
@@ -92,7 +94,7 @@ export function ProfileImprovements({ result, email, saveEmail }: {
         <form className="rv-email-form" onSubmit={submit} noValidate>
           <label className="rv-sr-only" htmlFor="rv-ranking-update-email">Your email address</label>
           <input ref={emailInput} id="rv-ranking-update-email" type="email" required maxLength={254} autoComplete="email" placeholder="Your email address" value={draft} disabled={submitting} aria-invalid={!!error} aria-describedby={error ? 'rv-ranking-update-help rv-ranking-update-error' : 'rv-ranking-update-help'} onChange={event => { touched.current = true; setDraft(event.target.value); setError(''); }} />
-          <button className="btn btn-primary" type="submit" disabled={submitting}>{submitting ? 'Submitting…' : 'Get my updated ranking'}</button>
+          <button className="btn btn-primary" type="submit" disabled={submitting} data-track="email_submit_click" data-track-location="improve" data-track-source="ranking_update">{submitting ? 'Submitting…' : 'Get my updated ranking'}</button>
         </form>
       </>}
       {error && <p id="rv-ranking-update-error" className="rv-error" role="alert">{error}</p>}

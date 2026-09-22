@@ -1,0 +1,12 @@
+---
+export const prerender = false;
+import { ROUTES, shareTaskPath } from '../../recruiters-view/site';
+
+const taskId = Astro.url.searchParams.get('taskId')?.trim();
+const target = new URL(Astro.url);
+target.pathname = taskId ? shareTaskPath(taskId) : ROUTES.entry;
+target.searchParams.delete('taskId');
+const redirect = Astro.redirect(`${target.pathname}${target.search}`, 302);
+redirect.headers.set('Cache-Control', 'private, no-store');
+return redirect;
+---

@@ -1,7 +1,7 @@
-import { ROUTES } from './site.ts';
+import { ROUTES, shareTaskPath } from './site.ts';
 import { completeTopThree } from './leaderboard.ts';
 import { withPreviousRanking } from './card-story.ts';
-import { hasMatchingShareSnapshot, makePeopleAbove, SHARE_ORIGIN, sharePageUrl, upgradeMockSnapshot } from './mock.ts';
+import { makePeopleAbove, upgradeMockSnapshot } from './mock.ts';
 import type { MatchedJob, RankDisplay, RankLookupFound, SearchQuery } from './types';
 
 export const JOBS_TOP_PERCENT = 1;
@@ -105,12 +105,14 @@ function peopleForScope(result: RankLookupFound, query: SearchQuery, rank: numbe
   });
 }
 
-export function resultShareUrl(result: RankLookupFound): string {
-  if (hasMatchingShareSnapshot(result)) return sharePageUrl(result.profile.handle);
-  const url = new URL(ROUTES.result, SHARE_ORIGIN);
+export function resultShareUrl(result: RankLookupFound, origin: string): string {
+  if (result.taskId) {
+    const url = new URL(shareTaskPath(result.taskId), origin);
+    url.searchParams.set('from', 'share');
+    return url.toString();
+  }
+  const url = new URL(ROUTES.entry, origin);
   url.searchParams.set('u', result.profile.handle);
-  // Mock-only URL state keeps the opened result consistent with the download.
-  // A production adapter must publish an opaque, server-owned snapshot ID.
   url.searchParams.set('revision', String(result.revision));
   url.searchParams.set('at', result.rankedAt);
   return url.toString();
@@ -126,12 +128,13 @@ export function applySharedMockState(base: RankLookupFound, params: URLSearchPar
 }
 
 export function showsJobMatches(result: RankLookupFound): boolean {
+  if (result.profileVersion === "live") return Boolean(result.jobs?.length);
   return Boolean(result.jobs?.length) || qualifiesForJobs(result.ranking);
 }
 
 export type { MatchedJob };
 export function matchedJobs(result: RankLookupFound): MatchedJob[] {
-  if (result.jobs?.length) return result.jobs;
+  if (result.profileVersion === "live" || result.jobs?.length) return result.jobs ?? [];
   const companies = ['Helio', 'Cascade', 'Packet', 'Vellum', 'Northshore', 'Fieldnote', 'Atelier', 'Nimbus', 'Ledgerly', 'Orion'];
   return companies.map((company, index) => ({
     id: `${result.profile.handle}-job-${index}`, title: result.query.jobTitle, company,

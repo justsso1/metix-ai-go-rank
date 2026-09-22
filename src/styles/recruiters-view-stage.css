@@ -1,7 +1,7 @@
 /* The one detail card lives in the user's list item; desktop places it in
    the left column while keeping the right-hand list's row geometry stable. */
 .rv-stage .wrap { max-width: 1248px; }
-.rv-composer, .rv-examples, .rv-progress, .rv-demo-notice, .rv-stage .wrap > .rv-error { max-width: 712px; margin-left: auto; margin-right: auto; }
+.rv-composer, .rv-progress, .rv-demo-notice, .rv-stage .wrap > .rv-error { max-width: 712px; margin-left: auto; margin-right: auto; }
 .rv-result { grid-template-columns: minmax(0, 1fr); gap: 28px; margin-top: 32px; }
 .rv-page section.rv-stage.is-result { padding-top: 0; }
 .rv-stage.is-result .rv-result { margin-top: 0; gap: 36px; }
