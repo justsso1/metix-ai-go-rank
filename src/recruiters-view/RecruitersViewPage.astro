@@ -1,0 +1,26 @@
+---
+import CampaignLayout from './CampaignLayout.astro';
+import RecruitersViewApp from './RecruitersViewApp';
+import { shareMetadata } from './share';
+import type { RankLookupFound } from './types';
+
+interface Props { result?: RankLookupFound; page?: 'entry' | 'result' | 'improve' | 'opportunities' }
+const { result, page = result ? 'result' : 'entry' } = Astro.props;
+const meta = shareMetadata(result);
+---
+<CampaignLayout
+  title={result ? meta.title : 'See your Recruiter Search ranking · Metix AI'}
+  description={meta.description}
+  path={meta.path}
+  ogTitle={meta.title}
+  ogDescription={meta.description}
+  image={meta.image}
+  imageAlt={meta.imageAlt}
+  imageWidth={meta.imageWidth}
+  imageHeight={meta.imageHeight}
+  noindex={true}
+>
+  <main id="content" class="rv-page">
+    <RecruitersViewApp initialResult={result} initialPage={page} client:load />
+  </main>
+</CampaignLayout>

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+# Pages declare noindex; allow social crawlers to fetch previews.

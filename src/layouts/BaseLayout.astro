@@ -1,0 +1,37 @@
+---
+import Analytics from '../components/Analytics.astro';
+import { SITE_ORIGIN } from '../recruiters-view/site';
+import '../styles/base.css';
+interface Props {
+ title: string; description: string; path: string; ogTitle?: string; ogDescription?: string;
+ image?: string; imageAlt?: string; imageWidth?: number; imageHeight?: number;
+ noindex?: boolean; bodyId?: string; showBanner?: boolean;
+}
+const {title, description, path, ogTitle=title, ogDescription=description,
+ image='/recruiters-view/og/default.png', imageAlt=ogTitle, imageWidth=1200, imageHeight=630,
+ noindex=true, bodyId='recruiters-view-campaign'} = Astro.props;
+const canonical=new URL(path,SITE_ORIGIN).href;
+const ogImage=new URL(image,SITE_ORIGIN).href;
+---
+<!doctype html>
+<html lang="en" style="color-scheme:light only">
+ <head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" /><meta name="darkreader-lock" />
+  <title>{title}</title><meta name="description" content={description} />
+  {noindex && <meta name="robots" content="noindex, nofollow" />}
+  <link rel="canonical" href={canonical} />
+  <meta property="og:type" content="website" /><meta property="og:site_name" content="Metix AI · Recruiter's View" />
+  <meta property="og:title" content={ogTitle} /><meta property="og:description" content={ogDescription} />
+  <meta property="og:url" content={canonical} /><meta property="og:image" content={ogImage} />
+  <meta property="og:image:alt" content={imageAlt} /><meta property="og:image:width" content={imageWidth} /><meta property="og:image:height" content={imageHeight} />
+  <meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content={ogTitle} />
+  <meta name="twitter:description" content={ogDescription} /><meta name="twitter:image" content={ogImage} /><meta name="twitter:image:alt" content={imageAlt} />
+  <link rel="icon" href="/favicon.ico" /><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" /><link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <Analytics /><slot name="head" />
+ </head>
+ <body id={bodyId}><slot name="navigation" /><slot /><slot name="footer" />
+  <script src="../scripts/metix-attribution.js"></script>
+  <script src="../scripts/metix-track.js"></script>
+ </body>
+</html>

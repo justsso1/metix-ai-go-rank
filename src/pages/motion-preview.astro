@@ -1,0 +1,8 @@
+---
+import CampaignLayout from '../recruiters-view/CampaignLayout.astro';
+import MotionPreview from '../recruiters-view/MotionPreview';
+---
+<CampaignLayout title="Ranking animation preview · Metix AI" description="Animation debugging preview." path="/motion-preview" noindex={true}>
+  <main id="content" class="rv-page"><MotionPreview client:load /></main>
+</CampaignLayout>
+<style is:global>body:has(.rv-motion-preview) > footer { display: none; }</style>

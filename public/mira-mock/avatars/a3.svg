@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img">
+  <rect width="128" height="128" fill="#e9e9f2"/>
+  <g transform="translate(64 70) scale(.94) translate(-64 -64)">
+    <g transform="rotate(-2 64 104)">
+      
+      <path d="M56 84h16v20H56Z" fill="#ae7d59"/>
+      <path d="M56 84h16v6q-8 6-16 0Z" fill="#936a4b"/>
+      <path d="M64 28c13 0 23 10 23 26 0 18-9 38-23 38s-23-20-23-38c0-16 10-26 23-26Z" fill="#c08b62"/>
+      <path d="M87 54c0 18-9 38-23 38 18-4 21-24 20-40Z" fill="#a57754" opacity=".45"/>
+      <ellipse cx="40" cy="63" rx="4" ry="6" fill="#b4825c"/>
+      <ellipse cx="88" cy="63" rx="4" ry="6" fill="#b4825c"/>
+      <ellipse cx="50" cy="72" rx="5.5" ry="3" fill="#c18260" opacity=".3"/>
+      <ellipse cx="78" cy="72" rx="5.5" ry="3" fill="#c18260" opacity=".3"/>
+      <path d="M49.9 55.1q4.6-2.4 9.2 -0.3" fill="none" stroke="#2b1e17" stroke-width="1.5" stroke-linecap="round" opacity=".85"/>
+      <path d="M68.9 54.35q4.6-2.4 9.2 0.15" fill="none" stroke="#2b1e17" stroke-width="1.5" stroke-linecap="round" opacity=".85"/>
+      <path d="M49.6 62.0c1.7-3.9 8.1-3.9 9.8 0c-1.8 3.1-8 3.1-9.8 0Z" fill="#2b1e17"/><circle cx="55.4" cy="61.1" r=".95" fill="#fff" opacity=".8"/>
+      <path d="M68.6 62.0c1.7-3.9 8.1-3.9 9.8 0c-1.8 3.1-8 3.1-9.8 0Z" fill="#2b1e17"/><circle cx="74.4" cy="61.1" r=".95" fill="#fff" opacity=".8"/>
+      <path d="M63 66v5q0 2 2.2 2.4" fill="none" stroke="#936a4b"
+            stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>
+      <path d="M59.5 79q4.5 4 9 0" fill="none" stroke="#75543c"
+            stroke-width="1.7" stroke-linecap="round"/>
+      <path d="M41 55c-1-19 10-28 23-28 12 0 23 8 23 25-5-10-11-14-19-13-9 1-15 6-19 16-2 3-4 3-8 0Z" fill="#2b1f18"/><path d="M58 31c8-3 16-2 21 3-7-2-14-3-21-3Z" fill="#756a62" opacity=".45"/>
+      
+    </g>
+    <path d="M64 98c29 0 53 17 58 44H6c5-27 29-44 58-44Z" fill="#6e7a8f"/>
+    <path d="M56 100q8 8 16 0 6 2 9 5-13 8-25 0 3-3 9-5Z" fill="#8d95a3"/>
+  </g>
+</svg>

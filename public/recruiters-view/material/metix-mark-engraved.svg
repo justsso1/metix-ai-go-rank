@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1140" viewBox="0 0 500 570">
+  <title>Metix translucent glass monogram</title>
+  <desc>A single Metix silhouette cast in clear glass, placed in the upper-right space beside the ranking headline. Translucent faces, refractive rims and a soft reflection preserve the quiet background.</desc>
+  <defs>
+    <path id="mark" d="M24.5,9.25c0-0.04,0-0.09-0.01-0.13c0,0,0,0,0,0c0,0,0,0,0,0c0-0.04-0.01-0.07-0.02-0.11c-0.03-0.15-0.09-0.29-0.18-0.42c-0.36-0.52-1.07-0.65-1.6-0.29l-6.34,4.36l2.03,1.39l0.01,0.01l0.62-0.42l3.19-2.19v1.86l-1.77,1.22c-0.33,0.23-0.33,0.72,0,0.95l1.77,1.22v1.86L17.04,15l0,0l-0.01-0.01l0,0L7.3,8.3C6.78,7.94,6.06,8.08,5.7,8.6C5.61,8.73,5.56,8.87,5.53,9.02C5.52,9.05,5.51,9.09,5.51,9.13c0,0,0,0,0,0c0,0,0,0,0,0C5.5,9.17,5.5,9.21,5.5,9.26c0,0,0,0.01,0,0.01v9.01v1.86v0.61c0,0,0,0,0,0c0,0.02,0,0.04,0,0.07c0,0.05,0.01,0.09,0.02,0.14c0,0.01,0,0.01,0,0.02c0.01,0.05,0.02,0.09,0.04,0.14c0,0,0,0,0,0c0.15,0.45,0.58,0.78,1.09,0.78h0c0.28,0,0.53-0.1,0.73-0.26l6.27-4.31l-2.03-1.39l0,0l-0.28,0.19L7.8,18.56V16.7l1.79-1.23c0.33-0.23,0.33-0.72,0-0.95L7.8,13.29v-1.86l3.54,2.44l0.28,0.19L12.97,15l0,0l0,0l9.65,6.64c0,0,0,0,0,0l0.15,0.1c0.17,0.1,0.37,0.16,0.58,0.16c0.56,0,1.02-0.4,1.12-0.92c0-0.01,0-0.01,0-0.02c0.01-0.05,0.02-0.09,0.02-0.14c0-0.02,0-0.06,0-0.06V9.26C24.5,9.26,24.5,9.26,24.5,9.25z M7.8,11.43l0.5,0.34L7.8,11.43L7.8,11.43z"/>
+    <linearGradient id="glass-face" x1="5" y1="8" x2="25" y2="22" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff" stop-opacity=".28"/>
+      <stop offset=".26" stop-color="#fff" stop-opacity=".045"/>
+      <stop offset=".43" stop-color="#e9f5ff" stop-opacity=".16"/>
+      <stop offset=".50" stop-color="#fff" stop-opacity=".40"/>
+      <stop offset=".57" stop-color="#9ba6bc" stop-opacity=".065"/>
+      <stop offset=".76" stop-color="#fff" stop-opacity=".025"/>
+      <stop offset="1" stop-color="#fff" stop-opacity=".25"/>
+    </linearGradient>
+    <linearGradient id="glass-rim" x1="7" y1="8" x2="22" y2="23" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff" stop-opacity=".98"/>
+      <stop offset=".24" stop-color="#e3f5ff" stop-opacity=".78"/>
+      <stop offset=".44" stop-color="#fff" stop-opacity=".24"/>
+      <stop offset=".61" stop-color="#7e7990" stop-opacity=".38"/>
+      <stop offset=".82" stop-color="#fff" stop-opacity=".90"/>
+      <stop offset="1" stop-color="#eff9ff" stop-opacity=".65"/>
+    </linearGradient>
+    <linearGradient id="glass-reflection" x1="5" y1="8" x2="25" y2="22" gradientUnits="userSpaceOnUse">
+      <stop offset=".35" stop-color="#fff" stop-opacity="0"/>
+      <stop offset=".44" stop-color="#fff" stop-opacity=".08"/>
+      <stop offset=".47" stop-color="#fff" stop-opacity=".60"/>
+      <stop offset=".49" stop-color="#dff8ff" stop-opacity=".12"/>
+      <stop offset=".57" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="glass-shadow" x="-8%" y="-10%" width="116%" height="120%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation=".11"/>
+    </filter>
+    <g id="engraving" stroke-linejoin="round" stroke-linecap="round">
+      <use href="#mark" fill="#51495c" opacity=".16" transform="translate(.08 .16)" filter="url(#glass-shadow)"/>
+      <use href="#mark" fill="none" stroke="#756b82" stroke-width=".18" opacity=".34" transform="translate(.05 .10)"/>
+      <use href="#mark" fill="url(#glass-face)" stroke="url(#glass-rim)" stroke-width=".16"/>
+      <use href="#mark" fill="url(#glass-reflection)"/>
+      <use href="#mark" fill="none" stroke="url(#glass-rim)" stroke-width=".065" opacity=".75" transform="translate(-.055 -.08)"/>
+    </g>
+  </defs>
+  <g>
+    <use href="#engraving" opacity=".88" transform="translate(399.1 200) scale(7.15) translate(-15 -15)"/>
+  </g>
+</svg>

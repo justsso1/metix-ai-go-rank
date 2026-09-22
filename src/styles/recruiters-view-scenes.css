@@ -1,0 +1,145 @@
+/* Three route-backed scenes. The share controls never belong to the artwork. */
+.rv-card-artwork, .rv-card-artwork svg { display: block; width: 100%; height: auto; }
+/* Rasterize the complete artwork as one plane before the parent tilts it.
+   Small labels and the number's embossed layers must share the same projection. */
+.rv-card-artwork { transform: translateZ(0); backface-visibility: hidden; }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .rv-full-card { will-change: transform; }
+}
+.rv-full-card { border: 0; background: transparent; overflow: hidden; }
+.rv-full-card::after, .rv-theme-gold::before { display: none; }
+.rv-card-material { z-index: 1; mix-blend-mode: soft-light; }
+.rv-material-iridescence { opacity: calc(var(--foil-active) * .34); }
+.rv-full-card .rv-material-glare { opacity: calc(var(--foil-active) * .32); }
+/* Opal silver: the static coat lives in the shared SVG; only its reflection moves. */
+.rv-full-card.rv-theme-standard .rv-card-material { filter: brightness(calc(1.015 + var(--foil-active) * .025)); }
+.rv-full-card.rv-theme-standard .rv-material-glare { display: block; background: radial-gradient(ellipse at var(--foil-x) var(--foil-y), #ffffffcf, #def3fa38 28%, transparent 62%); opacity: calc(var(--foil-active) * .13); }
+.rv-card-with-actions { min-width: 0; }
+.rv-opportunity-entry { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0 12px; margin: 20px 2px 0; padding-top: 12px; border-top: 1px solid var(--rv-line); }
+.rv-opportunity-entry h2, .rv-opportunity-link { font: 400 13px/1.5 var(--sans); letter-spacing: 0; }
+.rv-opportunity-entry h2 { color: #b3a9c1; margin: 0; }
+.rv-opportunity-link { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-weight: 500; color: #cbbade; text-decoration: none; white-space: nowrap; }
+.rv-opportunity-link:hover { color: #f0e5ff; text-decoration: underline; text-underline-offset: 4px; }
+.rv-shortlist-form .rv-email-heading { align-items: start; }
+.rv-shortlist-form h2 { font-size: 17px; line-height: 1.5; margin: 0; }
+.rv-shortlist-form .rv-success { align-items: start; line-height: 1.7; overflow-wrap: anywhere; }
+.rv-shortlist-form .rv-success svg, .rv-shortlist-form .rv-email-heading svg { flex: none; margin-top: 3px; }
+.rv-shortlist-form .rv-email-form { margin-top: 18px; }
+.rv-shortlist-form .rv-error { margin-top: 12px; }
+.rv-share-actions { margin-top: 24px; padding: 0 2px; color: #f4f0fc; }
+.rv-share-actions > p { font-size: 12px; margin: 0 0 12px; color: #beb6cf; }
+.rv-share-channels { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 8px; }
+.rv-share-channels a, .rv-share-channels button { display: flex; align-items: center; justify-content: center; gap: 7px; min-height: 48px; padding: 10px 8px; font: 550 12px var(--sans); text-decoration: none; color: #231c30; background: #d0c0f6; border: 1px solid #ddcffb; border-radius: 10px; cursor: pointer; }
+.rv-share-icon { display: block; flex: 0 0 16px; width: 16px; height: 16px; }
+.rv-share-channels a:hover, .rv-share-channels button:hover { background: #ffffff18; border-color: #ac9cbe; }
+.rv-share-channels a:focus-visible, .rv-share-channels button:focus-visible { outline: 2px solid #d5bfff; outline-offset: 3px; }
+.rv-share-channels button:disabled { opacity: .55; cursor: wait; }
+.rv-share-actions .rv-share-error { color: #ffcfcf; margin-top: 10px; }
+.is-revealing .rv-share-actions { animation: rv-detail-in .25s .8s both ease-out; }
+.is-revealing .rv-art-rank { animation: rv-detail-in .35s .45s both ease-out; }
+.is-revealing .rv-art-details { animation: rv-detail-in .3s .65s both ease-out; }
+.rv-card-with-actions > .rv-mobile-improve { margin-top: 16px; }
+.rv-route-loading { min-height: 60vh; display: grid; align-content: center; justify-content: center; padding: 40px 24px; }
+.rv-missing-page { min-height: calc(100dvh - 72px); padding: 32px 0 80px; }
+.rv-missing-page > .wrap { max-width: 760px; }
+.rv-miss-card .rv-missing-title { font: 450 clamp(26px, 4vw, 34px)/1.25 var(--display); letter-spacing: -.025em; margin: 20px 0 12px; }
+.rv-missing-title:focus { outline: none; }
+.rv-missing-url { color: var(--text-2); font-size: 13px; overflow-wrap: anywhere; margin-bottom: 24px; }
+.rv-index-notification .rv-email-heading { align-items: start; }
+.rv-index-notification .rv-email-heading h2 { font: 550 15px/1.5 var(--sans); margin: 0; }
+.rv-index-notification .rv-email-heading svg, .rv-index-notification .rv-success svg { flex: none; margin-top: 2px; }
+.rv-index-notification .rv-success { align-items: start; }
+.rv-page section.rv-stage.is-task { padding: 0; background: #f7f6f9; }
+.rv-task-page { min-height: calc(100dvh - 72px); padding: 28px 0 80px; background: #f7f6f9; }
+.rv-task-page > .wrap { max-width: 1192px; }
+.rv-return { display: inline-flex; align-items: center; gap: 8px; color: #655a72; font-size: 13px; text-decoration: none; padding: 8px 0; margin-bottom: 28px; }
+.rv-return:hover { color: #4938bd; }
+.rv-task-layout { display: grid; grid-template-columns: minmax(0,3fr) minmax(0,7fr); gap: 42px; align-items: start; }
+.rv-task-sidebar { min-width: 0; position: sticky; top: 104px; }
+.rv-task-sidebar .rv-full-card { box-shadow: 0 1px 2px #291e3010, 0 12px 34px -16px #30264150; }
+.rv-task-mobile-identity { display: none; }
+.rv-sidebar-status { display: flex; align-items: center; gap: 8px; font-size: 12px; line-height: 1.5; margin: 18px 4px 0; color: #7b7186; }
+.rv-sidebar-status > span { width: 6px; height: 6px; flex: none; border-radius: 50%; background: #9e92ad; }
+.rv-sidebar-status.is-waiting > span { background: #b78838; }
+.rv-sidebar-status.is-updated > span { background: #32846c; }
+.rv-task-content { min-width: 0; }
+.rv-task-content > header { margin: 0 0 28px; }
+.rv-task-content h1 { font: 450 clamp(26px,3vw,34px)/1.25 var(--display); letter-spacing: -.035em; margin-top: 10px; color: #24202a; max-width: none; }
+.rv-task-heading:focus { outline: none; }
+.rv-task-content header > p:last-child { margin-top: 14px; color: #7c7284; font-size: 14px; line-height: 1.6; }
+.rv-task-content .rv-improve-card { box-shadow: 0 6px 28px #40324906; border: 1px solid #e8e4ed; padding: 28px; }
+.rv-task-content h2 { font-size: 18px; font-weight: 500; letter-spacing: -.02em; }
+.rv-advice-count { font-size: 11px; color: #8b8194; white-space: nowrap; }
+.rv-task-content .rv-advice-list li { gap: 16px; padding: 22px 0; }
+.rv-improve-card .rv-advice-list { margin-bottom: 16px; }
+.rv-improve-card .rv-advice-list li:last-child { border-bottom: 0; padding-bottom: 12px; }
+.rv-advice-list details { flex: 1; min-width: 0; }
+.rv-advice-list summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 32px; font-size: 14px; font-weight: 500; line-height: 1.6; color: var(--text-strong); list-style: none; cursor: pointer; }
+.rv-advice-list summary::-webkit-details-marker { display: none; }
+.rv-advice-list summary svg { flex: none; color: #bcabd5; }
+.rv-advice-list details[open] summary svg { rotate: 180deg; }
+.rv-advice-list details p { margin-top: 12px; color: var(--text-2); font-size: 13px; line-height: 1.8; }
+.rv-profile-edit-link { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; color: var(--text-2); font-size: 13px; text-underline-offset: 4px; }
+.rv-profile-edit-link:hover { color: var(--text-strong); }
+.rv-ranking-update-form .rv-email-heading h3 { margin: 0; font: 500 17px/1.5 var(--sans); }
+.rv-ranking-update-form .rv-email-heading, .rv-ranking-update-form .rv-success { align-items: start; }
+.rv-ranking-update-form .rv-email-heading svg, .rv-ranking-update-form .rv-success svg { flex: none; margin-top: 3px; }
+.rv-ranking-update-form .rv-email-form { margin-top: 18px; }
+.rv-ranking-update-form .rv-email-form .btn { min-height: 46px; padding-inline: 18px; }
+.rv-ranking-update-form .rv-error { margin-top: 12px; }
+.rv-task-content .rv-fine-print { font-size: 11px; line-height: 1.7; color: #93899b; }
+::view-transition-group(ranking-card) { animation-duration: .55s; animation-timing-function: cubic-bezier(.22,1,.36,1); }
+/* The wide result and narrow sidebar have different artwork aspect ratios.
+   Fit both captures to the same animated bounds, including their height;
+   auto height creates two competing silhouettes during the crossfade. */
+::view-transition-old(ranking-card),
+::view-transition-new(ranking-card) { width: 100%; height: 100%; object-fit: fill; object-position: left top; }
+/* Keep the previous scene opaque underneath the incoming one. A short fade
+   through the document background would make the entire viewport flicker. */
+::view-transition-old(root) { animation: none; mix-blend-mode: normal; }
+::view-transition-new(root) { animation: rv-scene-in .3s both ease-out; mix-blend-mode: normal; }
+::view-transition-old(campaign-navigation) { display: none; }
+::view-transition-new(campaign-navigation) { animation: none; }
+@keyframes rv-scene-in { from { opacity: 0; } }
+@media (max-width: 1100px) and (min-width: 960px) { .rv-task-layout { grid-template-columns: minmax(280px,3fr) minmax(0,7fr); gap: 28px; } .rv-share-channels { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (max-width: 959px) {
+  .rv-task-page { padding-top: 16px; padding-bottom: 64px; }
+  .rv-task-layout { display: block; }
+  .rv-task-sidebar { position: static; margin-bottom: 30px; }
+  .rv-task-sidebar .rv-card-with-actions { display: none; }
+  .rv-task-mobile-identity { display: flex; align-items: center; gap: 12px; padding: 18px; background: #fff; border: 1px solid #e7e2ed; border-radius: 14px; }
+  .rv-task-mobile-identity img { width: 40px; height: 40px; border-radius: 50%; }
+  .rv-task-mobile-identity > div { flex: 1; min-width: 0; }
+  .rv-task-mobile-identity b { font-size: 14px; color: #27222e; }
+  .rv-task-mobile-identity p { font-size: 10px; line-height: 1.6; margin-top: 4px; color: #8b8094; }
+  .rv-task-mobile-identity strong { font: 500 28px var(--display); color: #4b3fd4; }
+  .rv-sidebar-status { font-size: 11px; margin-top: 12px; }
+  .rv-return { margin-bottom: 16px; }
+  .rv-task-content .rv-improve-card { padding: 22px 20px; }
+  .rv-task-content h1 { font-size: 28px; }
+  .rv-share-channels { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (prefers-reduced-motion: reduce) { ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation-duration: 0s !important; } }
+.rv-card-continuity { position: absolute; inset: 0; pointer-events: none; color: #161514; }
+.rv-reveal-identity .rv-art-avatar, .rv-reveal-identity .rv-art-name, .rv-reveal-identity .rv-art-rank-number { visibility: hidden; }
+.is-updating .rv-art-rank { animation: rv-detail-in .45s both ease-out; }
+.is-revealing .rv-card-continuity strong { animation: rv-rank-unmask .35s .45s both cubic-bezier(.22,1,.36,1); }
+
+.rv-task-content .rv-job-list { margin-top: 0; }
+.rv-task-content .rv-job:first-child { padding-top: 4px; }
+.rv-task-content .rv-job:last-child { padding-bottom: 4px; border-bottom: 0; }
+
+/* Glass card finish from the Zhaoyuan branch; the campaign owns all motion. */
+.rv-full-card {
+  --foil-texture: url('/recruiters-view/material/metix-mark-engraved.svg');
+  --card-rest-shadow: 0 1px 0 color-mix(in srgb, var(--material-edge) 65%, #fff),
+    0 3px 1px color-mix(in srgb, var(--material-edge) 60%, #302331),
+    0 6px 8px -4px #05030b4d, 0 24px 42px -22px #05030b80;
+}
+.rv-full-card .rv-material-iridescence { background-size: cover, 1100% 1100%, 600% 600%, 200% 200%; opacity: calc(var(--foil-active) * .15); }
+.rv-full-card.rv-theme-silver .rv-material-iridescence { opacity: calc(var(--foil-active) * .08); }
+.rv-glass-rank {
+  background: linear-gradient(155deg, var(--number-highlight), var(--number-light) 28%, var(--material-ink) 72%, var(--number-dark));
+  background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(-.25px -.55px .4px #ffffffb3) drop-shadow(.5px 1.2px .4px #31203d66);
+}

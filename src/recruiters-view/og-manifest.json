@@ -1,0 +1,963 @@
+{
+  "rendererHash": "6093f16c541ea89a8be5c1fecf535af5f28804949a60f5bf1b0a2b54148a08f6",
+  "templateHash": "2b3f0586e37574594022a7a25ed297bb8d46ff6baa81760ae3821f70f6bbd5e8",
+  "storyHash": "bf4bf940b44bfa4bf63a029cff59763dcde7264bbc49acc65a69cab664d33add",
+  "themeHash": "8ac14a52d92e0017d94ffb08bfbad65d876b6b9b75209c1fcc54edc87cf2f94d",
+  "foilHash": "5233ae595582870bbd81a2db09c44cc6054a95f035c66d85868cee3e71d51c87",
+  "materialHash": "267cf57a9fdf16c125d5d4ed838aa30a5d565113e6aad108653994127f7fec8f",
+  "assetHashes": {
+    "/recruiters-view/material/metix-mark-engraved.svg": "5233ae595582870bbd81a2db09c44cc6054a95f035c66d85868cee3e71d51c87",
+    "/recruiters-view/material/metix-satin-grain.svg": "a4e11296a327ca1b7e940b3965a2fc200865b7c05bc0547c83a6c7bff40afe65",
+    "/recruiters-view/material/metix-silk-relief.svg": "f7399b197a894662916531bdd0b7c974979fb549a5701146d6ba68828a689b78",
+    "/recruiters-view/brand/metix-logo-relief-silver.svg": "0d436682cbb085390601c94e9413371897b366321d7f2dc16ba2dceab9827473",
+    "/recruiters-view/brand/metix-logo-relief-gold.svg": "b40cf2dc536c3b4057d05ad600da07e82ea8cb57ecdab02ac5c94df017ac317a",
+    "/recruiters-view/brand/metix-logo-relief-bronze.svg": "cd463659eec585faa6a512b2fbb3cbd0c1d1b3e8765eed07ae34d48db6677e1d",
+    "/recruiters-view/podium/gold.png": "28d3de33eff99179bb9d6fb215c6b84d9ba350daacd70dc4243a8a3b7181f727",
+    "/recruiters-view/podium/silver.png": "795bbc0739ac8dd10dbb8445e2827f04e681084941f11ee1d868d3bf7a178bc0",
+    "/recruiters-view/podium/bronze.png": "1e11f245320b03855dd3a88fe8f1d52cd2734c13f48374565be7d34db3a0469c"
+  },
+  "cards": {
+    "default": {
+      "result": null,
+      "width": 1200,
+      "height": 630,
+      "sha256": "7491f43f4b50b3deba6defdae74882d7e0c78876ee0e8d8e04048d31a2f89832"
+    },
+    "maya-chen-se": {
+      "result": {
+        "status": "found",
+        "inputUrl": "https://www.linkedin.com/in/maya-chen-se",
+        "profile": {
+          "handle": "maya-chen-se",
+          "fullName": "Maya Chen",
+          "headline": "Senior Backend Engineer at Northwind",
+          "title": "Senior Backend Engineer",
+          "company": "Northwind",
+          "location": "Seattle, WA",
+          "metro": "Seattle",
+          "jobFamily": "Backend Engineer",
+          "yearsExperience": 5,
+          "skills": [
+            "Go",
+            "Kubernetes",
+            "distributed systems",
+            "PostgreSQL"
+          ],
+          "avatar": "/mira-mock/avatars/a1.svg"
+        },
+        "query": {
+          "jobTitle": "Senior Backend Engineer",
+          "location": "Seattle",
+          "seniorityBand": "4-7 years",
+          "companyType": "B2B software companies"
+        },
+        "ranking": {
+          "kind": "exact",
+          "rank": 47,
+          "poolSize": 1240
+        },
+        "recruiterReplyScore": 4.2,
+        "keywords": [
+          "backend",
+          "distributed systems",
+          "Kubernetes",
+          "Seattle"
+        ],
+        "suggestions": [
+          "Add Go and Kubernetes to your headline if they reflect your current work.",
+          "Describe one backend engineer project with its scale, your contribution, and a measurable outcome.",
+          "Open your About section with your 5 years of experience, specialization, and the problems you solve."
+        ],
+        "adviceKind": "personalized",
+        "topSearch": "Senior Backend Engineers in Seattle with Go and Kubernetes experience",
+        "rankedAt": "2026-09-15T12:00:00.000Z",
+        "profileVersion": "profile-v1",
+        "revision": 0,
+        "peopleAbove": {
+          "strongest": [
+            {
+              "id": "r1",
+              "rank": 1,
+              "fullName": "Alex Romero",
+              "headline": "Staff Backend Engineer at Helio",
+              "title": "Staff Backend Engineer",
+              "company": "Helio",
+              "location": "Seattle, WA",
+              "skills": [
+                "Go",
+                "Kubernetes",
+                "gRPC"
+              ],
+              "yearsExperience": 11,
+              "avatar": "/mira-mock/avatars/a4.svg"
+            },
+            {
+              "id": "r2",
+              "rank": 2,
+              "fullName": "Nina Okonkwo",
+              "headline": "Senior Backend Engineer at Cascade",
+              "title": "Senior Backend Engineer",
+              "company": "Cascade",
+              "location": "Seattle, WA",
+              "skills": [
+                "Rust",
+                "distributed systems"
+              ],
+              "yearsExperience": 8,
+              "avatar": "/mira-mock/avatars/a5.svg"
+            },
+            {
+              "id": "r3",
+              "rank": 3,
+              "fullName": "Kenji Mori",
+              "headline": "Staff Backend Engineer at Northwind",
+              "title": "Staff Backend Engineer",
+              "company": "Northwind",
+              "location": "Seattle, WA",
+              "skills": [
+                "Kafka",
+                "Go"
+              ],
+              "yearsExperience": 10,
+              "avatar": "/mira-mock/avatars/a10.svg"
+            }
+          ],
+          "justAhead": [
+            {
+              "id": "r44",
+              "rank": 44,
+              "fullName": "Samira Haddad",
+              "headline": "Senior Backend Engineer at Northshore",
+              "title": "Senior Backend Engineer",
+              "company": "Northshore",
+              "location": "Seattle, WA",
+              "skills": [
+                "Kubernetes",
+                "Kafka"
+              ],
+              "yearsExperience": 8,
+              "avatar": "/mira-mock/avatars/a8.svg"
+            },
+            {
+              "id": "r45",
+              "rank": 45,
+              "fullName": "Eli Vargas",
+              "headline": "Backend Engineer at Packet",
+              "title": "Backend Engineer",
+              "company": "Packet",
+              "location": "Seattle, WA",
+              "skills": [
+                "Go",
+                "AWS"
+              ],
+              "yearsExperience": 6,
+              "avatar": "/mira-mock/avatars/a9.svg"
+            },
+            {
+              "id": "r46",
+              "rank": 46,
+              "fullName": "Daniel Cho",
+              "headline": "Backend Engineer at Vellum",
+              "title": "Backend Engineer",
+              "company": "Vellum",
+              "location": "Bellevue, WA",
+              "skills": [
+                "Go",
+                "PostgreSQL"
+              ],
+              "yearsExperience": 6,
+              "avatar": "/mira-mock/avatars/a6.svg"
+            }
+          ]
+        },
+        "topThree": [
+          {
+            "id": "r1",
+            "rank": 1,
+            "fullName": "Alex Romero",
+            "headline": "Staff Backend Engineer at Helio",
+            "title": "Staff Backend Engineer",
+            "company": "Helio",
+            "location": "Seattle, WA",
+            "skills": [
+              "Go",
+              "Kubernetes",
+              "gRPC"
+            ],
+            "yearsExperience": 11,
+            "avatar": "/mira-mock/avatars/a4.svg"
+          },
+          {
+            "id": "r2",
+            "rank": 2,
+            "fullName": "Nina Okonkwo",
+            "headline": "Senior Backend Engineer at Cascade",
+            "title": "Senior Backend Engineer",
+            "company": "Cascade",
+            "location": "Seattle, WA",
+            "skills": [
+              "Rust",
+              "distributed systems"
+            ],
+            "yearsExperience": 8,
+            "avatar": "/mira-mock/avatars/a5.svg"
+          },
+          {
+            "id": "r3",
+            "rank": 3,
+            "fullName": "Kenji Mori",
+            "headline": "Staff Backend Engineer at Northwind",
+            "title": "Staff Backend Engineer",
+            "company": "Northwind",
+            "location": "Seattle, WA",
+            "skills": [
+              "Kafka",
+              "Go"
+            ],
+            "yearsExperience": 10,
+            "avatar": "/mira-mock/avatars/a10.svg"
+          }
+        ]
+      },
+      "width": 1280,
+      "height": 1488,
+      "sha256": "c760aabc01db7892ca0e90fda5a8f3b99b255f1ae5ae5baae6c1cb3f80051bbd"
+    },
+    "jordan-hale-pm": {
+      "result": {
+        "status": "found",
+        "inputUrl": "https://www.linkedin.com/in/jordan-hale-pm",
+        "profile": {
+          "handle": "jordan-hale-pm",
+          "fullName": "Jordan Hale",
+          "headline": "Product Manager, B2B workflow tools",
+          "title": "Product Manager",
+          "company": "Harborline",
+          "location": "New York, NY",
+          "metro": "New York",
+          "jobFamily": "Product Manager",
+          "yearsExperience": 6,
+          "skills": [
+            "B2B SaaS",
+            "roadmap",
+            "SQL",
+            "onboarding"
+          ],
+          "avatar": "/mira-mock/avatars/a2.svg"
+        },
+        "query": {
+          "jobTitle": "Product Manager",
+          "location": "New York",
+          "seniorityBand": "4-7 years",
+          "companyType": "B2B software companies"
+        },
+        "ranking": {
+          "kind": "exact",
+          "rank": 86,
+          "poolSize": 980
+        },
+        "recruiterReplyScore": 3.8,
+        "keywords": [
+          "product",
+          "B2B SaaS",
+          "roadmap",
+          "New York"
+        ],
+        "suggestions": [
+          "Add B2B SaaS and roadmap to your headline if they reflect your current work.",
+          "Describe one product manager project with its scale, your contribution, and a measurable outcome.",
+          "Open your About section with your 6 years of experience, specialization, and the problems you solve."
+        ],
+        "adviceKind": "personalized",
+        "topSearch": "Product Managers in New York with B2B SaaS and roadmap experience",
+        "rankedAt": "2026-09-15T12:00:00.000Z",
+        "profileVersion": "profile-v1",
+        "revision": 0,
+        "peopleAbove": {
+          "strongest": [
+            {
+              "id": "p1",
+              "rank": 1,
+              "fullName": "Riley Ames",
+              "headline": "Senior Product Manager, payments",
+              "title": "Senior Product Manager",
+              "company": "Ledgerly",
+              "location": "New York, NY",
+              "skills": [
+                "B2B SaaS",
+                "payments"
+              ],
+              "yearsExperience": 9,
+              "avatar": "/mira-mock/avatars/a4.svg"
+            },
+            {
+              "id": "p2",
+              "rank": 2,
+              "fullName": "Chen Wei",
+              "headline": "Product Manager, workflow",
+              "title": "Product Manager",
+              "company": "Atelier",
+              "location": "Brooklyn, NY",
+              "skills": [
+                "roadmap",
+                "SQL"
+              ],
+              "yearsExperience": 8,
+              "avatar": "/mira-mock/avatars/a10.svg"
+            },
+            {
+              "id": "p3",
+              "rank": 3,
+              "fullName": "Ava Brooks",
+              "headline": "PM, growth",
+              "title": "Product Manager",
+              "company": "Kite",
+              "location": "New York, NY",
+              "skills": [
+                "onboarding",
+                "experimentation"
+              ],
+              "yearsExperience": 7,
+              "avatar": "/mira-mock/avatars/a5.svg"
+            }
+          ],
+          "justAhead": [
+            {
+              "id": "p83",
+              "rank": 83,
+              "fullName": "Omar Diallo",
+              "headline": "Product Manager at Northline",
+              "title": "Product Manager",
+              "company": "Northline",
+              "location": "Jersey City, NJ",
+              "skills": [
+                "B2B SaaS"
+              ],
+              "yearsExperience": 6,
+              "avatar": "/mira-mock/avatars/a6.svg"
+            },
+            {
+              "id": "p84",
+              "rank": 84,
+              "fullName": "Leila Santos",
+              "headline": "Product Manager at Harbor",
+              "title": "Product Manager",
+              "company": "Harbor",
+              "location": "New York, NY",
+              "skills": [
+                "roadmap",
+                "B2B SaaS"
+              ],
+              "yearsExperience": 5,
+              "avatar": "/mira-mock/avatars/a8.svg"
+            },
+            {
+              "id": "p85",
+              "rank": 85,
+              "fullName": "Jonah Berg",
+              "headline": "Product Manager at Orion",
+              "title": "Product Manager",
+              "company": "Orion",
+              "location": "New York, NY",
+              "skills": [
+                "SQL",
+                "experimentation"
+              ],
+              "yearsExperience": 5,
+              "avatar": "/mira-mock/avatars/a9.svg"
+            }
+          ]
+        },
+        "topThree": [
+          {
+            "id": "p1",
+            "rank": 1,
+            "fullName": "Riley Ames",
+            "headline": "Senior Product Manager, payments",
+            "title": "Senior Product Manager",
+            "company": "Ledgerly",
+            "location": "New York, NY",
+            "skills": [
+              "B2B SaaS",
+              "payments"
+            ],
+            "yearsExperience": 9,
+            "avatar": "/mira-mock/avatars/a4.svg"
+          },
+          {
+            "id": "p2",
+            "rank": 2,
+            "fullName": "Chen Wei",
+            "headline": "Product Manager, workflow",
+            "title": "Product Manager",
+            "company": "Atelier",
+            "location": "Brooklyn, NY",
+            "skills": [
+              "roadmap",
+              "SQL"
+            ],
+            "yearsExperience": 8,
+            "avatar": "/mira-mock/avatars/a10.svg"
+          },
+          {
+            "id": "p3",
+            "rank": 3,
+            "fullName": "Ava Brooks",
+            "headline": "PM, growth",
+            "title": "Product Manager",
+            "company": "Kite",
+            "location": "New York, NY",
+            "skills": [
+              "onboarding",
+              "experimentation"
+            ],
+            "yearsExperience": 7,
+            "avatar": "/mira-mock/avatars/a5.svg"
+          }
+        ]
+      },
+      "width": 1280,
+      "height": 1488,
+      "sha256": "61b8237353bf21a377d61761a5d8baf0e216eef27f6cf9fd6f7854f0c097b5ac"
+    },
+    "priya-nair-ml": {
+      "result": {
+        "status": "found",
+        "inputUrl": "https://www.linkedin.com/in/priya-nair-ml",
+        "profile": {
+          "handle": "priya-nair-ml",
+          "fullName": "Priya Nair",
+          "headline": "Staff Machine Learning Engineer",
+          "title": "Staff Machine Learning Engineer",
+          "company": "Lumenfield",
+          "location": "San Francisco, CA",
+          "metro": "San Francisco",
+          "jobFamily": "Machine Learning Engineer",
+          "yearsExperience": 9,
+          "skills": [
+            "PyTorch",
+            "LLM eval",
+            "feature stores",
+            "Python"
+          ],
+          "avatar": "/mira-mock/avatars/a3.svg"
+        },
+        "query": {
+          "jobTitle": "Staff Machine Learning Engineer",
+          "location": "San Francisco",
+          "seniorityBand": "8-12 years",
+          "companyType": "AI companies"
+        },
+        "ranking": {
+          "kind": "exact",
+          "rank": 5,
+          "poolSize": 640
+        },
+        "recruiterReplyScore": 4.6,
+        "keywords": [
+          "machine learning",
+          "PyTorch",
+          "LLM eval",
+          "San Francisco"
+        ],
+        "suggestions": [
+          "Add PyTorch and LLM eval to your headline if they reflect your current work.",
+          "Describe one machine learning engineer project with its scale, your contribution, and a measurable outcome.",
+          "Open your About section with your 9 years of experience, specialization, and the problems you solve."
+        ],
+        "adviceKind": "personalized",
+        "topSearch": "Staff Machine Learning Engineers in San Francisco with PyTorch and LLM eval experience",
+        "rankedAt": "2026-09-15T12:00:00.000Z",
+        "profileVersion": "profile-v1",
+        "revision": 0,
+        "peopleAbove": {
+          "strongest": [
+            {
+              "id": "m1",
+              "rank": 1,
+              "fullName": "Leila Santos",
+              "headline": "Principal ML Engineer at Harbor",
+              "title": "Principal Machine Learning Engineer",
+              "company": "Harbor",
+              "location": "San Francisco, CA",
+              "skills": [
+                "feature stores",
+                "Python"
+              ],
+              "yearsExperience": 14,
+              "avatar": "/mira-mock/avatars/a9.svg"
+            },
+            {
+              "id": "m2",
+              "rank": 2,
+              "fullName": "Jonah Berg",
+              "headline": "Staff ML Engineer at Orion",
+              "title": "Staff Machine Learning Engineer",
+              "company": "Orion",
+              "location": "San Francisco, CA",
+              "skills": [
+                "PyTorch",
+                "LLM eval"
+              ],
+              "yearsExperience": 12,
+              "avatar": "/mira-mock/avatars/a8.svg"
+            },
+            {
+              "id": "m3",
+              "rank": 3,
+              "fullName": "Kenji Mori",
+              "headline": "Staff ML Engineer at Nimbus",
+              "title": "Staff Machine Learning Engineer",
+              "company": "Nimbus",
+              "location": "Palo Alto, CA",
+              "skills": [
+                "PyTorch",
+                "ranking"
+              ],
+              "yearsExperience": 10,
+              "avatar": "/mira-mock/avatars/a10.svg"
+            }
+          ],
+          "justAhead": [
+            {
+              "id": "m4",
+              "rank": 4,
+              "fullName": "Riley Ames",
+              "headline": "Staff ML Engineer at Ledgerly",
+              "title": "Staff Machine Learning Engineer",
+              "company": "Ledgerly",
+              "location": "San Francisco, CA",
+              "skills": [
+                "PyTorch",
+                "Python"
+              ],
+              "yearsExperience": 9,
+              "avatar": "/mira-mock/avatars/a4.svg"
+            }
+          ]
+        },
+        "topThree": [
+          {
+            "id": "m1",
+            "rank": 1,
+            "fullName": "Leila Santos",
+            "headline": "Principal ML Engineer at Harbor",
+            "title": "Principal Machine Learning Engineer",
+            "company": "Harbor",
+            "location": "San Francisco, CA",
+            "skills": [
+              "feature stores",
+              "Python"
+            ],
+            "yearsExperience": 14,
+            "avatar": "/mira-mock/avatars/a9.svg"
+          },
+          {
+            "id": "m2",
+            "rank": 2,
+            "fullName": "Jonah Berg",
+            "headline": "Staff ML Engineer at Orion",
+            "title": "Staff Machine Learning Engineer",
+            "company": "Orion",
+            "location": "San Francisco, CA",
+            "skills": [
+              "PyTorch",
+              "LLM eval"
+            ],
+            "yearsExperience": 12,
+            "avatar": "/mira-mock/avatars/a8.svg"
+          },
+          {
+            "id": "m3",
+            "rank": 3,
+            "fullName": "Kenji Mori",
+            "headline": "Staff ML Engineer at Nimbus",
+            "title": "Staff Machine Learning Engineer",
+            "company": "Nimbus",
+            "location": "Palo Alto, CA",
+            "skills": [
+              "PyTorch",
+              "ranking"
+            ],
+            "yearsExperience": 10,
+            "avatar": "/mira-mock/avatars/a10.svg"
+          }
+        ]
+      },
+      "width": 1280,
+      "height": 1462,
+      "sha256": "14f5fe82149bdfab259997e356590a202137ab5c5488eadad5d344cda342b0ca"
+    },
+    "alex-romero-be": {
+      "result": {
+        "status": "found",
+        "inputUrl": "https://www.linkedin.com/in/alex-romero-be",
+        "profile": {
+          "handle": "alex-romero-be",
+          "fullName": "Alex Romero",
+          "headline": "Staff Backend Engineer at Helio",
+          "title": "Staff Backend Engineer",
+          "company": "Helio",
+          "location": "Seattle, WA",
+          "metro": "Seattle",
+          "jobFamily": "Backend Engineer",
+          "yearsExperience": 11,
+          "skills": [
+            "Go",
+            "Kubernetes",
+            "gRPC"
+          ],
+          "avatar": "/mira-mock/avatars/a4.svg",
+          "id": "r1",
+          "rank": 1
+        },
+        "query": {
+          "jobTitle": "Senior Backend Engineer",
+          "location": "Seattle",
+          "seniorityBand": "4-7 years",
+          "companyType": "B2B software companies"
+        },
+        "ranking": {
+          "kind": "exact",
+          "rank": 1,
+          "poolSize": 1240
+        },
+        "recruiterReplyScore": 4.4,
+        "keywords": [
+          "backend",
+          "distributed systems",
+          "Kubernetes",
+          "Seattle"
+        ],
+        "suggestions": [
+          "Add Go and Kubernetes to your headline if they reflect your current work.",
+          "Describe one backend engineer project with its scale, your contribution, and a measurable outcome.",
+          "Open your About section with your 11 years of experience, specialization, and the problems you solve."
+        ],
+        "adviceKind": "personalized",
+        "topSearch": "Senior Backend Engineers in Seattle with Go and Kubernetes experience",
+        "rankedAt": "2026-09-15T12:00:00.000Z",
+        "profileVersion": "profile-v1",
+        "revision": 0,
+        "peopleAbove": {
+          "strongest": [],
+          "justAhead": []
+        },
+        "topThree": [
+          {
+            "id": "self-alex-romero-be",
+            "rank": 1,
+            "fullName": "Alex Romero",
+            "headline": "Staff Backend Engineer at Helio",
+            "title": "Staff Backend Engineer",
+            "company": "Helio",
+            "location": "Seattle, WA",
+            "skills": [
+              "Go",
+              "Kubernetes",
+              "gRPC"
+            ],
+            "yearsExperience": 11,
+            "avatar": "/mira-mock/avatars/a4.svg"
+          },
+          {
+            "id": "r2",
+            "rank": 2,
+            "fullName": "Nina Okonkwo",
+            "headline": "Senior Backend Engineer at Cascade",
+            "title": "Senior Backend Engineer",
+            "company": "Cascade",
+            "location": "Seattle, WA",
+            "skills": [
+              "Rust",
+              "distributed systems"
+            ],
+            "yearsExperience": 8,
+            "avatar": "/mira-mock/avatars/a5.svg"
+          },
+          {
+            "id": "r3",
+            "rank": 3,
+            "fullName": "Kenji Mori",
+            "headline": "Staff Backend Engineer at Northwind",
+            "title": "Staff Backend Engineer",
+            "company": "Northwind",
+            "location": "Seattle, WA",
+            "skills": [
+              "Kafka",
+              "Go"
+            ],
+            "yearsExperience": 10,
+            "avatar": "/mira-mock/avatars/a10.svg"
+          }
+        ]
+      },
+      "width": 1280,
+      "height": 1488,
+      "sha256": "a94400dfc57efc6f54b7767ee1c33cca74db24c368b1e65251c828cfa733e2cf"
+    },
+    "nina-okonkwo-be": {
+      "result": {
+        "status": "found",
+        "inputUrl": "https://www.linkedin.com/in/nina-okonkwo-be",
+        "profile": {
+          "handle": "nina-okonkwo-be",
+          "fullName": "Nina Okonkwo",
+          "headline": "Senior Backend Engineer at Cascade",
+          "title": "Senior Backend Engineer",
+          "company": "Cascade",
+          "location": "Seattle, WA",
+          "metro": "Seattle",
+          "jobFamily": "Backend Engineer",
+          "yearsExperience": 8,
+          "skills": [
+            "Rust",
+            "distributed systems"
+          ],
+          "avatar": "/mira-mock/avatars/a5.svg",
+          "id": "r2",
+          "rank": 2
+        },
+        "query": {
+          "jobTitle": "Senior Backend Engineer",
+          "location": "Seattle",
+          "seniorityBand": "4-7 years",
+          "companyType": "B2B software companies"
+        },
+        "ranking": {
+          "kind": "exact",
+          "rank": 2,
+          "poolSize": 1240
+        },
+        "recruiterReplyScore": 4.1,
+        "keywords": [
+          "backend",
+          "distributed systems",
+          "Kubernetes",
+          "Seattle"
+        ],
+        "suggestions": [
+          "Add Rust and distributed systems to your headline if they reflect your current work.",
+          "Describe one backend engineer project with its scale, your contribution, and a measurable outcome.",
+          "Open your About section with your 8 years of experience, specialization, and the problems you solve."
+        ],
+        "adviceKind": "personalized",
+        "topSearch": "Senior Backend Engineers in Seattle with Rust and distributed systems experience",
+        "rankedAt": "2026-09-15T12:00:00.000Z",
+        "profileVersion": "profile-v1",
+        "revision": 0,
+        "peopleAbove": {
+          "strongest": [
+            {
+              "id": "r1",
+              "rank": 1,
+              "fullName": "Alex Romero",
+              "headline": "Staff Backend Engineer at Helio",
+              "title": "Staff Backend Engineer",
+              "company": "Helio",
+              "location": "Seattle, WA",
+              "skills": [
+                "Go",
+                "Kubernetes",
+                "gRPC"
+              ],
+              "yearsExperience": 11,
+              "avatar": "/mira-mock/avatars/a4.svg"
+            }
+          ],
+          "justAhead": []
+        },
+        "topThree": [
+          {
+            "id": "r1",
+            "rank": 1,
+            "fullName": "Alex Romero",
+            "headline": "Staff Backend Engineer at Helio",
+            "title": "Staff Backend Engineer",
+            "company": "Helio",
+            "location": "Seattle, WA",
+            "skills": [
+              "Go",
+              "Kubernetes",
+              "gRPC"
+            ],
+            "yearsExperience": 11,
+            "avatar": "/mira-mock/avatars/a4.svg"
+          },
+          {
+            "id": "self-nina-okonkwo-be",
+            "rank": 2,
+            "fullName": "Nina Okonkwo",
+            "headline": "Senior Backend Engineer at Cascade",
+            "title": "Senior Backend Engineer",
+            "company": "Cascade",
+            "location": "Seattle, WA",
+            "skills": [
+              "Rust",
+              "distributed systems"
+            ],
+            "yearsExperience": 8,
+            "avatar": "/mira-mock/avatars/a5.svg"
+          },
+          {
+            "id": "r3",
+            "rank": 3,
+            "fullName": "Kenji Mori",
+            "headline": "Staff Backend Engineer at Northwind",
+            "title": "Staff Backend Engineer",
+            "company": "Northwind",
+            "location": "Seattle, WA",
+            "skills": [
+              "Kafka",
+              "Go"
+            ],
+            "yearsExperience": 10,
+            "avatar": "/mira-mock/avatars/a10.svg"
+          }
+        ]
+      },
+      "width": 1280,
+      "height": 1532,
+      "sha256": "af16a4fceeed2c5d935cb64445b533512cfe516e61908b667460f4598609366a"
+    },
+    "kenji-mori-be": {
+      "result": {
+        "status": "found",
+        "inputUrl": "https://www.linkedin.com/in/kenji-mori-be",
+        "profile": {
+          "handle": "kenji-mori-be",
+          "fullName": "Kenji Mori",
+          "headline": "Staff Backend Engineer at Northwind",
+          "title": "Staff Backend Engineer",
+          "company": "Northwind",
+          "location": "Seattle, WA",
+          "metro": "Seattle",
+          "jobFamily": "Backend Engineer",
+          "yearsExperience": 10,
+          "skills": [
+            "Kafka",
+            "Go"
+          ],
+          "avatar": "/mira-mock/avatars/a10.svg",
+          "id": "r3",
+          "rank": 3
+        },
+        "query": {
+          "jobTitle": "Senior Backend Engineer",
+          "location": "Seattle",
+          "seniorityBand": "4-7 years",
+          "companyType": "B2B software companies"
+        },
+        "ranking": {
+          "kind": "exact",
+          "rank": 3,
+          "poolSize": 1240
+        },
+        "recruiterReplyScore": 4.3,
+        "keywords": [
+          "backend",
+          "distributed systems",
+          "Kubernetes",
+          "Seattle"
+        ],
+        "suggestions": [
+          "Add Kafka and Go to your headline if they reflect your current work.",
+          "Describe one backend engineer project with its scale, your contribution, and a measurable outcome.",
+          "Open your About section with your 10 years of experience, specialization, and the problems you solve."
+        ],
+        "adviceKind": "personalized",
+        "topSearch": "Senior Backend Engineers in Seattle with Kafka and Go experience",
+        "rankedAt": "2026-09-15T12:00:00.000Z",
+        "profileVersion": "profile-v1",
+        "revision": 0,
+        "peopleAbove": {
+          "strongest": [
+            {
+              "id": "r1",
+              "rank": 1,
+              "fullName": "Alex Romero",
+              "headline": "Staff Backend Engineer at Helio",
+              "title": "Staff Backend Engineer",
+              "company": "Helio",
+              "location": "Seattle, WA",
+              "skills": [
+                "Go",
+                "Kubernetes",
+                "gRPC"
+              ],
+              "yearsExperience": 11,
+              "avatar": "/mira-mock/avatars/a4.svg"
+            },
+            {
+              "id": "r2",
+              "rank": 2,
+              "fullName": "Nina Okonkwo",
+              "headline": "Senior Backend Engineer at Cascade",
+              "title": "Senior Backend Engineer",
+              "company": "Cascade",
+              "location": "Seattle, WA",
+              "skills": [
+                "Rust",
+                "distributed systems"
+              ],
+              "yearsExperience": 8,
+              "avatar": "/mira-mock/avatars/a5.svg"
+            }
+          ],
+          "justAhead": []
+        },
+        "topThree": [
+          {
+            "id": "r1",
+            "rank": 1,
+            "fullName": "Alex Romero",
+            "headline": "Staff Backend Engineer at Helio",
+            "title": "Staff Backend Engineer",
+            "company": "Helio",
+            "location": "Seattle, WA",
+            "skills": [
+              "Go",
+              "Kubernetes",
+              "gRPC"
+            ],
+            "yearsExperience": 11,
+            "avatar": "/mira-mock/avatars/a4.svg"
+          },
+          {
+            "id": "r2",
+            "rank": 2,
+            "fullName": "Nina Okonkwo",
+            "headline": "Senior Backend Engineer at Cascade",
+            "title": "Senior Backend Engineer",
+            "company": "Cascade",
+            "location": "Seattle, WA",
+            "skills": [
+              "Rust",
+              "distributed systems"
+            ],
+            "yearsExperience": 8,
+            "avatar": "/mira-mock/avatars/a5.svg"
+          },
+          {
+            "id": "self-kenji-mori-be",
+            "rank": 3,
+            "fullName": "Kenji Mori",
+            "headline": "Staff Backend Engineer at Northwind",
+            "title": "Staff Backend Engineer",
+            "company": "Northwind",
+            "location": "Seattle, WA",
+            "skills": [
+              "Kafka",
+              "Go"
+            ],
+            "yearsExperience": 10,
+            "avatar": "/mira-mock/avatars/a10.svg"
+          }
+        ]
+      },
+      "width": 1280,
+      "height": 1488,
+      "sha256": "db0aa68f7dc013b1858a6704be8933e9b3e59eb14d3035b8962877fa9a11caa7"
+    }
+  }
+}

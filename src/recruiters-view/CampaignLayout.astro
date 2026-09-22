@@ -1,0 +1,20 @@
+---
+import type { ComponentProps } from 'astro/types';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CampaignNav from './CampaignNav.astro';
+import CampaignFooter from './CampaignFooter.astro';
+import '../styles/recruiters-view.css';
+import '../styles/recruiters-view-stage.css';
+import '../styles/recruiters-view-scenes.css';
+import '../styles/recruiters-view-theme.css';
+import '../styles/recruiters-view-journey.css';
+import '../styles/recruiters-view-chrome.css';
+
+type Props = ComponentProps<typeof BaseLayout>;
+---
+<BaseLayout {...Astro.props} showBanner={false} bodyId="recruiters-view-campaign">
+  <CampaignNav slot="navigation" />
+  <a class="rv-skip" href="#content">Skip to content</a>
+  <slot />
+  <CampaignFooter slot="footer" />
+</BaseLayout>
