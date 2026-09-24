@@ -29,12 +29,12 @@
 |---|---|---|---|
 | 入口 | `/recruiters-view/`，包括仅带 `linkedin_url` 的入口 | `page_view`，`scene=recruiters-view` | `recruiters-view` |
 | 结果 | `/share/:taskId`、`/recruiters-view/result`、带 `task_id` / `taskId` / `u` 的入口 | `page_view`，`scene=result` | `result` |
-| 分享中转 | 直接打开 `/share/:taskId?from=share` | 中转响应不发送 `page_view`；真人重定向后的首页会发送 `recruiters-view` PV | — |
+| 分享中转 | 直接打开 `/show/:taskId` | 中转响应不发送 `page_view`；真人重定向后的首页会发送 `recruiters-view` PV | — |
 | 改进 | `/recruiters-view/improve` | `page_view`，`scene=improve` | `improve` |
 | 职位 | `/recruiters-view/opportunities` | `page_view`，`scene=opportunities` | `opportunities` |
 | 退订 | `/unsubscribe`、`/recruiters-view/unsubscribe` | `page_view`，`scene=unsubscribe` | `unsubscribe` |
 
-`/`、`/show/:taskId` 和旧 `/recruiters-view/share` 只重定向；nginx 部署下的 `/unsubcribe` 也重定向。在最终落地页记录 PV。404 不产生业务事件。首次加载由 SDK 记录，客户端切换场景由 React 记录；同一页面 ID 连续出现只记一次。`page_view` 表示进入页面场景，不表示排名已查到；查到结果另记 `result.show`。结果页在当前标签更新成带 `from=share` 的地址时不会额外触发首页 PV。
+`/` 和旧 `/recruiters-view/share` 只重定向；nginx 部署下的 `/unsubcribe` 也重定向。在最终落地页记录 PV。404 不产生业务事件。首次加载由 SDK 记录，客户端切换场景由 React 记录；同一页面 ID 连续出现只记一次。`page_view` 表示进入页面场景，不表示排名已查到；查到结果另记 `result.show`。结果页在当前标签更新成 `/share/:taskId` 时不会额外触发首页 PV。
 
 ## 3. 页面与按钮清单
 

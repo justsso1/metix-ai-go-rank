@@ -1,11 +1,23 @@
 ---
 export const prerender = false;
-import { shareTaskPath } from '../../recruiters-view/site';
+import SharePreview from '../../recruiters-view/SharePreview.astro';
+import { publicOriginForRequest } from '../../recruiters-view/public-origin.server';
+import { shareMetadataForTask } from '../../recruiters-view/share-metadata.server';
+import { ROUTES, showTaskPath } from '../../recruiters-view/site';
 
-const target = new URL(Astro.url);
-target.pathname = shareTaskPath(Astro.params.taskId ?? '');
-target.searchParams.set('from', 'share');
-const redirect = Astro.redirect(`${target.pathname}${target.search}`, 308);
-redirect.headers.set('Cache-Control', 'private, no-store');
-return redirect;
+const userAgent = Astro.request.headers.get('user-agent') ?? '';
+const isSocialCrawler = /Twitterbot|facebookexternalhit|Facebot|LinkedInBot|Slackbot|Discordbot|WhatsApp|TelegramBot|Pinterestbot|SkypeUriPreview/i.test(userAgent);
+
+if (!isSocialCrawler) {
+  const redirect = Astro.redirect(ROUTES.entry, 302);
+  redirect.headers.set('Cache-Control', 'private, no-store');
+  redirect.headers.set('Vary', 'User-Agent');
+  return redirect;
+}
+
+Astro.response.headers.set('Cache-Control', 'private, no-store');
+Astro.response.headers.set('Vary', 'User-Agent');
+const origin = publicOriginForRequest(Astro.request);
+const metadata = await shareMetadataForTask(Astro.params.taskId ?? '', origin, showTaskPath(Astro.params.taskId ?? ''));
 ---
+<SharePreview metadata={metadata} origin={origin} />

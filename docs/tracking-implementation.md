@@ -18,7 +18,7 @@
   → 采集服务
 ```
 
-`go.metix.ai` 和 `go-dev.metix.ai` 都向各自环境配置的 API 域名发请求；本地和其他预览域名不上传。`/share/:taskId?from=share` 的 OG 响应与真人重定向不加载这些脚本。
+`go.metix.ai` 和 `go-dev.metix.ai` 都向各自环境配置的 API 域名发请求；本地和其他预览域名不上传。`/show/:taskId` 的 OG 响应与真人重定向不加载这些脚本。
 
 脚本在 `BaseLayout.astro` 里、归因脚本之后加载：
 
@@ -74,9 +74,9 @@ data-track="email_submit_click" data-track-source="ranking_update"
 | `/share/:taskId` | `result` / `result` | `/share/:taskId` |
 | `/recruiters-view/result`、`/recruiters-view/improve`、`/recruiters-view/opportunities` | 对应页面 ID | 不带查询参数的路由路径 |
 | `/unsubscribe` | `unsubscribe` / `unsubscribe` | `/unsubscribe` |
-| 404、带标记分享链接的直访 | 无业务事件 | — |
+| 404、`/show/:taskId` 中转响应 | 无业务事件 | — |
 
-结果页成功生成后，React 用 History API 把地址更新为 `/share/:taskId?from=share`，页面保持挂载，不会因此再记首页 PV。直接访问带 `from=share` 的地址由服务端返回 OG 或跳首页；真人到达首页后正常记一条 `recruiters-view` PV。
+结果页成功生成后，React 用 History API 把地址更新为 `/share/:taskId`，页面保持挂载，不会因此再记首页 PV。分享按钮生成 `/show/:taskId`；该地址对爬虫返回与结果页相同的 OG 图，对真人跳首页。真人到达首页后正常记一条 `recruiters-view` PV。
 
 ## 3. 单条事件
 
