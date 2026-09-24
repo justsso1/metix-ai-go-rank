@@ -8,7 +8,7 @@ import {
   campaignAddress,
   campaignPage,
   missingResultAddress,
-  taskIdFromSharePath,
+  taskIdFromShowPath,
   viewStateKey,
   type CampaignPage,
   type ResultPage,
@@ -99,7 +99,7 @@ export default function RecruitersViewApp({
     const taskId =
       params.get("task_id") ??
       params.get("taskId") ??
-      taskIdFromSharePath(location.pathname);
+      taskIdFromShowPath(location.pathname);
     const restore = history.state?.rv;
     if (taskId !== null) {
       if (linkedInUrl) setUrl(linkedInUrl);
@@ -194,7 +194,7 @@ export default function RecruitersViewApp({
         const linkedTaskId =
           query.get("task_id") ??
           query.get("taskId") ??
-          taskIdFromSharePath(location.pathname);
+          taskIdFromShowPath(location.pathname);
         if (linkedTaskId !== null) {
           void runTaskLookup(linkedTaskId);
           return;
@@ -334,7 +334,7 @@ export default function RecruitersViewApp({
       (!result &&
         (params.has("task_id") ||
           params.has("taskId") ||
-          taskIdFromSharePath(window.location.pathname) !== null))
+          taskIdFromShowPath(window.location.pathname) !== null))
     )
       return;
     const metadata = shareMetadata();

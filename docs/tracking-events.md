@@ -28,13 +28,13 @@
 | 场景 | 路径 | 页面事件 | `pageId` |
 |---|---|---|---|
 | 入口 | `/recruiters-view/`，包括仅带 `linkedin_url` 的入口 | `page_view`，`scene=recruiters-view` | `recruiters-view` |
-| 结果 | `/share/:taskId`、`/recruiters-view/result`、带 `task_id` / `taskId` / `u` 的入口 | `page_view`，`scene=result` | `result` |
-| 分享中转 | 直接打开 `/show/:taskId` | 中转响应不发送 `page_view`；真人重定向后的首页会发送 `recruiters-view` PV | — |
+| 结果 | `/show/:taskId`、`/recruiters-view/result`、带 `task_id` / `taskId` / `u` 的入口 | `page_view`，`scene=result` | `result` |
+| 分享中转 | 直接打开 `/share/:taskId` | 中转响应不发送 `page_view`；真人重定向后的首页会发送 `recruiters-view` PV | — |
 | 改进 | `/recruiters-view/improve` | `page_view`，`scene=improve` | `improve` |
 | 职位 | `/recruiters-view/opportunities` | `page_view`，`scene=opportunities` | `opportunities` |
 | 退订 | `/unsubscribe`、`/recruiters-view/unsubscribe` | `page_view`，`scene=unsubscribe` | `unsubscribe` |
 
-`/` 和旧 `/recruiters-view/share` 只重定向；nginx 部署下的 `/unsubcribe` 也重定向。在最终落地页记录 PV。404 不产生业务事件。首次加载由 SDK 记录，客户端切换场景由 React 记录；同一页面 ID 连续出现只记一次。`page_view` 表示进入页面场景，不表示排名已查到；查到结果另记 `result.show`。结果页在当前标签更新成 `/share/:taskId` 时不会额外触发首页 PV。
+`/` 和旧 `/recruiters-view/share` 只重定向；nginx 部署下的 `/unsubcribe` 也重定向。在最终落地页记录 PV。404 不产生业务事件。首次加载由 SDK 记录，客户端切换场景由 React 记录；同一页面 ID 连续出现只记一次。`page_view` 表示进入页面场景，不表示排名已查到；查到结果另记 `result.show`。结果页在当前标签更新成 `/show/:taskId` 时不会额外触发首页 PV。
 
 ## 3. 页面与按钮清单
 
@@ -116,7 +116,7 @@ token 缺失时显示错误，只保留按钮点击事件，不发 `unsubscribe.
 
 上面是 `trackCampaign` 的白名单。声明式 `data-track-*` 由 SDK 读取，当前只填固定分类值及建议的序号 `item_index`；SDK 限制每项长度，但不执行这份业务白名单。新增声明式属性时必须保持分类值，不能放输入框内容或动态用户资料。
 
-SDK 另外自动带上：`path`、`campaign=rank`、`scene`、`event_name`、`is_logged_in`、`visitor_id`，以及 14 天内的 UTM / 点击标识。没有归因时 `utm_source=direct`。调用方不能覆盖这些自动字段。`path` 不带查询参数：任务页记录 `/share/:taskId`，退订页记录 `/unsubscribe`。归因脚本按原值保留 UTM / 点击标识（最长 255 字符），这部分不经过上面的业务属性白名单；投放链接不得在这些参数里放个人信息。
+SDK 另外自动带上：`path`、`campaign=rank`、`scene`、`event_name`、`is_logged_in`、`visitor_id`，以及 14 天内的 UTM / 点击标识。没有归因时 `utm_source=direct`。调用方不能覆盖这些自动字段。`path` 不带查询参数：任务页记录 `/show/:taskId`，退订页记录 `/unsubscribe`。归因脚本按原值保留 UTM / 点击标识（最长 255 字符），这部分不经过上面的业务属性白名单；投放链接不得在这些参数里放个人信息。
 
 业务事件属性不采集：LinkedIn URL、handle、邮箱、姓名、公司、职位原文、建议文案、错误原文、退订 token。
 

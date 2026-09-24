@@ -1,6 +1,6 @@
 # Migration validation — 2026-09-22
 
-This is a historical migration record. Current task-backed share actions use `/show/{taskId}`. Social crawlers receive the same backend OG metadata as `/share/{taskId}`; ordinary visitors are redirected to `/recruiters-view/`. The old snapshot API, local personal OG renderer, test source, and mock-personal OG assets were removed at the user's request. The validation results below describe the earlier migration, not the current deployment.
+This is a historical migration record. Current task-backed share actions use `/share/{taskId}`. Social crawlers receive the same backend OG metadata as `/show/{taskId}`; ordinary visitors are redirected to `/recruiters-view/`. The old snapshot API, local personal OG renderer, test source, and mock-personal OG assets were removed at the user's request. The validation results below describe the earlier migration, not the current deployment.
 
 Source: metix-homepage-fork, commit b7b065a. Destination: metix-ai-go-rank.
 

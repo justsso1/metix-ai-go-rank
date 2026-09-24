@@ -296,6 +296,7 @@
   }
 
   const CAMPAIGN_BASE = "/recruiters-view";
+  const SHOW_TASK_PATH = /^\/show\/[^/]+\/?$/;
   const SHARE_TASK_PATH = /^\/share\/[^/]+\/?$/;
   function campaignSegments(pathname) {
     const segments = (pathname || "/").split("/").filter(Boolean);
@@ -303,7 +304,7 @@
   }
 
   function sceneForPath(pathname) {
-    if (SHARE_TASK_PATH.test(pathname)) return "result";
+    if (SHOW_TASK_PATH.test(pathname)) return "result";
     if (/^\/unsubscribe\/?$/.test(pathname)) return "unsubscribe";
     const segments = campaignSegments(pathname);
     if (!segments) return null;
@@ -317,6 +318,7 @@
   }
 
   function safePath(pathname) {
+    if (SHOW_TASK_PATH.test(pathname)) return "/show/:taskId";
     if (SHARE_TASK_PATH.test(pathname)) return "/share/:taskId";
     if (/^\/unsubscribe\/?$/.test(pathname)) return "/unsubscribe";
     const segments = campaignSegments(pathname);
