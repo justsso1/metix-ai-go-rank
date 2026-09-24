@@ -1,4 +1,4 @@
-import { ROUTES, showTaskPath } from './site.ts';
+import { ROUTES, shareTaskPath } from './site.ts';
 import { completeTopThree } from './leaderboard.ts';
 import { withPreviousRanking } from './card-story.ts';
 import { makePeopleAbove, upgradeMockSnapshot } from './mock.ts';
@@ -107,7 +107,7 @@ function peopleForScope(result: RankLookupFound, query: SearchQuery, rank: numbe
 
 export function resultShareUrl(result: RankLookupFound, origin: string): string {
   if (result.taskId) {
-    return new URL(showTaskPath(result.taskId), origin).toString();
+    return new URL(shareTaskPath(result.taskId), origin).toString();
   }
   const url = new URL(ROUTES.entry, origin);
   url.searchParams.set('u', result.profile.handle);

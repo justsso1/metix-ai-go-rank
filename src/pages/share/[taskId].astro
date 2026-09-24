@@ -1,11 +1,23 @@
 ---
 export const prerender = false;
-import RecruitersViewPage from '../../recruiters-view/RecruitersViewPage.astro';
+import SharePreview from '../../recruiters-view/SharePreview.astro';
 import { publicOriginForRequest } from '../../recruiters-view/public-origin.server';
 import { shareMetadataForTask } from '../../recruiters-view/share-metadata.server';
+import { ROUTES } from '../../recruiters-view/site';
+
+const userAgent = Astro.request.headers.get('user-agent') ?? '';
+const isSocialCrawler = /Twitterbot|facebookexternalhit|Facebot|LinkedInBot|Slackbot|Discordbot|WhatsApp|TelegramBot|Pinterestbot|SkypeUriPreview/i.test(userAgent);
+
+if (!isSocialCrawler) {
+  const redirect = Astro.redirect(ROUTES.entry, 302);
+  redirect.headers.set('Cache-Control', 'private, no-store');
+  redirect.headers.set('Vary', 'User-Agent');
+  return redirect;
+}
 
 Astro.response.headers.set('Cache-Control', 'private, no-store');
+Astro.response.headers.set('Vary', 'User-Agent');
 const origin = publicOriginForRequest(Astro.request);
 const metadata = await shareMetadataForTask(Astro.params.taskId ?? '', origin);
 ---
-<RecruitersViewPage page="result" origin={origin} metadata={metadata} />
+<SharePreview metadata={metadata} origin={origin} />

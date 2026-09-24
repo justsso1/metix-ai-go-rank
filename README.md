@@ -12,7 +12,7 @@ cp .env.example .env
 npm run dev
 ```
 
-Open http://127.0.0.1:4322/recruiters-view/. Completed rankings use `/share/{taskId}` for the result page, while share buttons produce `/show/{taskId}` on the current origin. A development or preview host stays on that host; production links use `go.metix.ai`.
+Open http://127.0.0.1:4322/recruiters-view/. Completed rankings use `/show/{taskId}` for the result page, while share buttons produce `/share/{taskId}` on the current origin. A development or preview host stays on that host; production links use `go.metix.ai`.
 
 ```sh
 npm run check        # production build + TypeScript check
@@ -21,7 +21,7 @@ npm run preview      # preview the built Astro server
 
 ## Routes
 
-`/recruiters-view/`, `/recruiters-view/?linkedin_url=...&task_id=...`, `/share/{taskId}`, `/show/{taskId}`, `/recruiters-view/result?u=...`, `/recruiters-view/improve?taskId=...`, `/recruiters-view/opportunities?taskId=...`, and `/unsubscribe?token=...`. The deployed Nginx redirects the legacy misspelled `/unsubcribe?token=...` path to `/unsubscribe?token=...`, preserving the token in existing email links. New email links should use `/unsubscribe`. Email links with `task_id` immediately show the loading state. `linkedin_url` may remain in the URL but is not used for the task lookup. After a successful lookup, browser navigation changes the result URL to `/share/{taskId}` without reloading; copying a link or using the share buttons produces `/show/{taskId}`. Ordinary visitors opening a show link are redirected to `/recruiters-view/`. Legacy `/recruiters-view/share?taskId=...` and `/recruiters-view/?taskId=...` links redirect to the result route. Example results without a backend task ID still share their `/recruiters-view/?u=...` URL.
+`/recruiters-view/`, `/recruiters-view/?linkedin_url=...&task_id=...`, `/show/{taskId}`, `/share/{taskId}`, `/recruiters-view/result?u=...`, `/recruiters-view/improve?taskId=...`, `/recruiters-view/opportunities?taskId=...`, and `/unsubscribe?token=...`. The deployed Nginx redirects the legacy misspelled `/unsubcribe?token=...` path to `/unsubscribe?token=...`, preserving the token in existing email links. New email links should use `/unsubscribe`. Email links with `task_id` immediately show the loading state. `linkedin_url` may remain in the URL but is not used for the task lookup. After a successful lookup, browser navigation changes the result URL to `/show/{taskId}` without reloading; copying a link or using the share buttons produces `/share/{taskId}`. Ordinary visitors opening a share link are redirected to `/recruiters-view/`. Legacy `/recruiters-view/share?taskId=...` and `/recruiters-view/?taskId=...` links redirect to the result route. Example results without a backend task ID still share their `/recruiters-view/?u=...` URL.
 
 ## Services and environment
 
@@ -31,7 +31,7 @@ For an email link, the browser first posts `{ "task_id": "..." }` to `/bapi/peer
 
 The unsubscribe page makes no validation request when opened. Cancel returns to `/recruiters-view/`; Confirm posts `{ "token": "..." }` to `/bapi/peer-rank/unsubscribe` and displays the returned error message or a success state.
 
-The `/share/{taskId}` result route reads the ranking on the server and writes its returned `og_image_url`, dimensions, title, and description into the initial HTML head. The result page still loads its ranking in the browser. On `/show/{taskId}`, social crawler User-Agents receive OG metadata from the same ranking result; human visitors receive a 302 redirect to `/recruiters-view/`. Metadata uses the current public host. Responses use `Cache-Control: private, no-store`; the show route also uses `Vary: User-Agent`. A pending task, unavailable result, or missing image uses the general OG image. The returned OG image URL must be public to social crawlers.
+The `/show/{taskId}` result route reads the ranking on the server and writes its returned `og_image_url`, dimensions, title, and description into the initial HTML head. The result page still loads its ranking in the browser. On `/share/{taskId}`, social crawler User-Agents receive OG metadata from the same ranking result; human visitors receive a 302 redirect to `/recruiters-view/`. Metadata uses the current public host. Responses use `Cache-Control: private, no-store`; the share route also uses `Vary: User-Agent`. A pending task, unavailable result, or missing image uses the general OG image. The returned OG image URL must be public to social crawlers.
 
 Tracking uses the same `NEXT_PUBLIC_API_BASE` origin as ranking requests. Both proxies map `/api/track/*` to `/hire/api/track/*` on that origin, matching the `openjobs-recruiter-ui` collector path. Anonymous visitors use `/api/track/anonymous/collect`; visitors with an access token use `/api/track/collect/batch`. A rejected access token falls back to anonymous collection.
 
@@ -46,7 +46,7 @@ docker build -t metix-go-rank .
 docker run --rm -p 8080:80 -e NEXT_PUBLIC_API_BASE=https://www-dev.metix.ai metix-go-rank
 ```
 
-Pass `NEXT_PUBLIC_API_BASE` to the container at startup, using the matching API origin for each environment. Nginx proxies `/recruiters-view/`, `/recruiters-view/share`, `/share/`, and `/show/` to the Astro server. Public `/bapi/peer-rank/...` requests reach `/hire/bapi/peer-rank/...`, and `/api/track/...` reaches `/hire/api/track/...` on the same API origin. Origins must be http(s) origins without credentials/path. The ingress must forward the public `Host`. Server-rendered show URLs use that host when it is a `metix.ai` subdomain, `localhost`, or `127.0.0.1`; public Metix hosts use HTTPS. `/healthz` reports container health. Long ranking calls have a 130-second proxy timeout; align the external ingress timeout accordingly.
+Pass `NEXT_PUBLIC_API_BASE` to the container at startup, using the matching API origin for each environment. Nginx proxies `/recruiters-view/`, `/recruiters-view/share`, `/share/`, and `/show/` to the Astro server. Public `/bapi/peer-rank/...` requests reach `/hire/bapi/peer-rank/...`, and `/api/track/...` reaches `/hire/api/track/...` on the same API origin. Origins must be http(s) origins without credentials/path. The ingress must forward the public `Host`. Server-rendered share and show URLs use that host when it is a `metix.ai` subdomain, `localhost`, or `127.0.0.1`; public Metix hosts use HTTPS. `/healthz` reports container health. Long ranking calls have a 130-second proxy timeout; align the external ingress timeout accordingly.
 
 The CSP permits LinkedIn image hosts for card export. For another avatar provider, use an approved image proxy or explicitly add its origin. Browser export needs image-server CORS permission; displaying an avatar alone does not guarantee it can be exported.
 
@@ -54,6 +54,6 @@ Terms and Privacy link to metix.ai. All current pages retain noindex. robots.txt
 
 ## Existing service boundaries
 
-Ranking results/advice/jobs can come from the Peer Rank API. Social crawlers visiting `/show/{taskId}` read the same result and OG image metadata as `/share/{taskId}` from `/hire/bapi/peer-rank/rank/{taskId}` on the configured API origin. Ranking-update and job-shortlist email forms still save requests locally: **they do not send emails**. The current success copy is preserved from the source; connect real request endpoints before enabling these promises in a public campaign.
+Ranking results/advice/jobs can come from the Peer Rank API. Social crawlers visiting `/share/{taskId}` read the same result and OG image metadata as `/show/{taskId}` from `/hire/bapi/peer-rank/rank/{taskId}` on the configured API origin. Ranking-update and job-shortlist email forms still save requests locally: **they do not send emails**. The current success copy is preserved from the source; connect real request endpoints before enabling these promises in a public campaign.
 
 Original website redirects to go.metix.ai are not changed by this extraction. Production upstream connectivity, analytics ingestion, DNS and TLS require deployment verification with the real services.

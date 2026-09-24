@@ -18,7 +18,7 @@
   → 采集服务
 ```
 
-`go.metix.ai` 和 `go-dev.metix.ai` 都向各自环境配置的 API 域名发请求；本地和其他预览域名不上传。`/show/:taskId` 的 OG 响应与真人重定向不加载这些脚本。
+`go.metix.ai` 和 `go-dev.metix.ai` 都向各自环境配置的 API 域名发请求；本地和其他预览域名不上传。`/share/:taskId` 的 OG 响应与真人重定向不加载这些脚本。
 
 脚本在 `BaseLayout.astro` 里、归因脚本之后加载：
 
@@ -71,12 +71,12 @@ data-track="email_submit_click" data-track-source="ranking_update"
 |---|---|---|
 | `/recruiters-view/` | `recruiters-view` / `recruiters-view` | `/recruiters-view/` |
 | `/recruiters-view/?task_id=...`、`?taskId=...`、`?u=...` | `result` / `result` | `/recruiters-view/` |
-| `/share/:taskId` | `result` / `result` | `/share/:taskId` |
+| `/show/:taskId` | `result` / `result` | `/show/:taskId` |
 | `/recruiters-view/result`、`/recruiters-view/improve`、`/recruiters-view/opportunities` | 对应页面 ID | 不带查询参数的路由路径 |
 | `/unsubscribe` | `unsubscribe` / `unsubscribe` | `/unsubscribe` |
-| 404、`/show/:taskId` 中转响应 | 无业务事件 | — |
+| 404、`/share/:taskId` 中转响应 | 无业务事件 | — |
 
-结果页成功生成后，React 用 History API 把地址更新为 `/share/:taskId`，页面保持挂载，不会因此再记首页 PV。分享按钮生成 `/show/:taskId`；该地址对爬虫返回与结果页相同的 OG 图，对真人跳首页。真人到达首页后正常记一条 `recruiters-view` PV。
+结果页成功生成后，React 用 History API 把地址更新为 `/show/:taskId`，页面保持挂载，不会因此再记首页 PV。分享按钮生成 `/share/:taskId`；该地址对爬虫返回与结果页相同的 OG 图，对真人跳首页。真人到达首页后正常记一条 `recruiters-view` PV。
 
 ## 3. 单条事件
 
@@ -149,7 +149,7 @@ data-track="email_submit_click" data-track-source="ranking_update"
 ## 7. 隐私
 
 - `analytics.ts` 的业务事件白名单之外的键全部丢掉。字符串不符合分类值格式也丢掉；声明式 `data-track-*` 另由 SDK 读取，新增字段需人工保持为非个人信息的分类值。
-- 分享 URL、外链 target、referrer 只保留本站规范路径或外部 origin；`/share/{taskId}` 只记录 `/share/:taskId`。
+- 分享 URL、外链 target、referrer 只保留本站规范路径或外部 origin；`/show/{taskId}` 记录为 `/show/:taskId`，`/share/{taskId}` 记录为 `/share/:taskId`。
 - 归因参数由独立脚本保存并由 SDK 带入事件，不经过业务属性白名单；投放链接需保证 UTM / 点击标识不含个人信息。
 - 页面标题固定成 `Metix Rank — <scene>`，不用文档标题。
 - 异常全部吞掉。埋点失败不能影响查询、邮件和退订。
