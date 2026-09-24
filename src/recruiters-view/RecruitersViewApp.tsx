@@ -57,7 +57,6 @@ export default function RecruitersViewApp({
   const [returnScroll, setReturnScroll] = useState<number | null>(null);
   const [url, setUrl] = useState(initialResult?.inputUrl ?? "");
   const [error, setError] = useState("");
-  const [retryTaskId, setRetryTaskId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState<LookupProgress | null>(null);
   const [result, setResult] = useState<RankLookupResult | null>(
@@ -162,7 +161,6 @@ export default function RecruitersViewApp({
       setReveal(false);
       setJourney(null);
       setError("");
-      setRetryTaskId(null);
       const destination = campaignPage(location.pathname, location.search);
       setPage(destination);
       if (destination === "entry") {
@@ -443,7 +441,6 @@ export default function RecruitersViewApp({
     setResult(current);
     setPage("result");
     setReturnScroll(scroll);
-    setRetryTaskId(null);
     const view = { rv: { page: "result", result: current, scroll } };
     const destination =
       address ??
@@ -454,7 +451,7 @@ export default function RecruitersViewApp({
     else history.pushState(view, "", destination);
   }
 
-  function showInlineError(message: string, taskId?: string) {
+  function showInlineError(message: string) {
     journeyActive.current = false;
     setJourney(null);
     setReveal(false);
@@ -462,13 +459,11 @@ export default function RecruitersViewApp({
     setPage("entry");
     setReturnScroll(0);
     setError(message);
-    setRetryTaskId(taskId ?? null);
     if (location.pathname !== "/recruiters-view/" || location.search)
       history.replaceState({}, "", "/recruiters-view/");
   }
 
   async function runLookup(raw: string, params?: URLSearchParams) {
-    setRetryTaskId(null);
     const parsed = parseLinkedInInput(raw);
     if (parsed.ok === false) {
       trackCampaign("lookup_error", { reason: "invalid_input" });
@@ -559,7 +554,6 @@ export default function RecruitersViewApp({
 
   async function runTaskLookup(taskId: string) {
     trackCampaign("lookup_start", { source: "link", mode: "live" });
-    setRetryTaskId(null);
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
@@ -595,14 +589,13 @@ export default function RecruitersViewApp({
         setReturnScroll(0);
       } else if (next.status === "not_found" || next.status === "unavailable")
         showUnavailableResult(next, true);
-      else showInlineError(next.message, taskId);
+      else showInlineError(next.message);
     } catch (err) {
       if ((err as Error).name === "AbortError") return;
       trackCampaign("lookup_error", { reason: "service_error" });
       showInlineError(
         (err as Error).message ||
           "The lookup did not finish. Try the link again.",
-        taskId,
       );
     } finally {
       if (abortRef.current === controller) {
@@ -749,7 +742,6 @@ export default function RecruitersViewApp({
                   onChange={(event) => {
                     setUrl(event.target.value);
                     setError("");
-                    setRetryTaskId(null);
                   }}
                   type="text"
                   inputMode="url"
@@ -777,15 +769,6 @@ export default function RecruitersViewApp({
               <p className="rv-error" role="alert">
                 {error}
               </p>
-            )}
-            {error && retryTaskId && (
-              <button
-                className="rv-lookup-retry"
-                type="button"
-                onClick={() => void runTaskLookup(retryTaskId)}
-              >
-                Try again
-              </button>
             )}
             {loading && progress && <LookupProgressView progress={progress} />}
           </div>

@@ -27,7 +27,7 @@ npm run preview      # preview the built Astro server
 
 Configure `NEXT_PUBLIC_API_BASE` to the same origin used by `openjobs-recruiter-ui`: `https://www-dev.metix.ai` for dev, `https://www-test.metix.ai` for test, or `https://www.metix.ai` for prod. Browser requests to `go-dev.metix.ai/bapi/peer-rank/...` are forwarded to `https://www-dev.metix.ai/hire/bapi/peer-rank/...` in dev. The Vite development proxy and Nginx runtime proxy both read this variable and apply the same `/bapi/` → `/hire/bapi/` path mapping for the configured environment.
 
-For an email link, the browser first posts `{ "task_id": "..." }` to `/bapi/peer-rank/email/result-token`, then polls `/bapi/peer-rank/rank/{taskId}` with the returned `queryToken` in `X-Peer-Rank-Token`. Token issuance failure stops the ranking request, displays the API `msg`, and offers a retry on the same link. Task IDs must be nonempty and at most 64 characters. Manual searches keep using the token returned by ranking submission.
+For an email link, the browser first posts `{ "task_id": "..." }` to `/bapi/peer-rank/email/result-token`, then polls `/bapi/peer-rank/rank/{taskId}` with the returned `queryToken` in `X-Peer-Rank-Token`. Token issuance failure stops the ranking request and displays the API `msg` below the input. Task IDs must be nonempty and at most 64 characters. Manual searches keep using the token returned by ranking submission.
 
 The unsubscribe page makes no validation request when opened. Cancel returns to `/recruiters-view/`; Confirm posts `{ "token": "..." }` to `/bapi/peer-rank/unsubscribe` and displays the returned error message or a success state.
 

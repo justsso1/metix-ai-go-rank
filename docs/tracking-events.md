@@ -59,7 +59,7 @@
 | 查询动画 Cancel search | `cancel_search.click` | 中止请求；中止不记 `lookup.error` |
 | 未收录或不可用页 Back to search | `return_to_search.click`，`location=not_found` / `unavailable` | 返回入口，随后首页 PV |
 
-邮件或未标记分享链接进入会记 `lookup.start`，`source=link`。查到排名记 `lookup.success`，`result_type=found`；档案不存在或排名不可用（包括 `/peer-rank/rank` 返回业务码 `6306`）记 `lookup.error`，`result_type=not_found` / `unavailable`，展示带三条建议、无按钮的结果卡片。其他接口错误记 `result_type=invalid`，网络异常和超时记 `reason=service_error`；这些错误显示在入口输入框下。邮件链接查询失败时还可在错误下重试任务。本地输入格式无效也显示在输入框下，且没有 `lookup.start`。
+邮件或未标记分享链接进入会记 `lookup.start`，`source=link`。查到排名记 `lookup.success`，`result_type=found`；档案不存在或排名不可用（包括 `/peer-rank/rank` 返回业务码 `6306`）记 `lookup.error`，`result_type=not_found` / `unavailable`，展示带三条建议、无按钮的结果卡片。其他接口错误记 `result_type=invalid`，网络异常和超时记 `reason=service_error`；这些错误显示在入口输入框下。本地输入格式无效也显示在输入框下，且没有 `lookup.start`。
 
 ### 3.3 排名结果与分享
 
