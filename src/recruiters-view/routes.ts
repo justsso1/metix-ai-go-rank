@@ -21,7 +21,6 @@ export function campaignAddress(result: RankLookupFound, page: ResultPage): stri
   if (result.taskId) {
     if (page === 'result') {
       url.pathname = shareTaskPath(result.taskId);
-      url.searchParams.set('from', 'share');
     } else {
       url.pathname = ROUTES[page];
       url.searchParams.set('taskId', result.taskId);
