@@ -73,7 +73,7 @@
 | Copy link / Copied | `share_copy_attempt.click` | 剪贴板写入成功后另记 `share.click`，`channel=copy`；失败仅有点击事件 |
 | Download card | `card_download.click` | `format=png`；仅代表点击下载链接 |
 | Retry download | `card_download_retry.click` | 仅图片生成失败且重试按钮可点击时发送 |
-| Remove me | `remove_profile.click` | 请求成功或失败都会显示 toast，约 1.8 秒后返回入口；点击事件不代表服务端移除成功 |
+| Remove me | `remove_profile.click` | 请求成功、失败或等待超过 15 秒都会显示 toast，约 3 秒后返回入口；点击事件不代表服务端移除成功 |
 | Check another profile | `return_to_search.click`，`location=result` | 返回入口，随后首页 PV |
 
 卡片仍在 Preparing 状态时按钮禁用，无点击事件；复制失败、浏览器是否真正下载文件、社交平台是否发帖，目前都没有成功事件。

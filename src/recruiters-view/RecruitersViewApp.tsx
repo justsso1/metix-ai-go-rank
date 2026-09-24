@@ -43,7 +43,9 @@ import type {
 } from "./types";
 
 const REMOVED_KEY = "metix-recruiters-view-removed";
-const REMOVE_REDIRECT_DELAY_MS = 1800;
+const REMOVE_REQUEST_TIMEOUT_MS = 15_000;
+const REMOVE_REDIRECT_DELAY_MS = 3000;
+const REMOVE_TOAST_DURATION_MS = 5000;
 const holdJourneyResult = () => {};
 
 export default function RecruitersViewApp({
@@ -640,10 +642,18 @@ export default function RecruitersViewApp({
     trackCampaign("remove_profile");
     const controller = new AbortController();
     removeRequest.current = controller;
+    let timedOut = false;
+    const requestTimeout = window.setTimeout(() => {
+      timedOut = true;
+      controller.abort();
+    }, REMOVE_REQUEST_TIMEOUT_MS);
     let outcome: { message: string; kind: "success" | "error" };
     try {
       await removePeerRankProfile(linkedinUrl, controller.signal);
-      if (controller.signal.aborted) return;
+      if (controller.signal.aborted) {
+        if (!timedOut) return;
+        throw new Error("Removal request timed out");
+      }
       const next = Array.from(new Set([...removed.current, handle]));
       removed.current = next;
       try {
@@ -655,14 +665,17 @@ export default function RecruitersViewApp({
       } catch {
         /* This lookup is still cleared in memory. */
       }
-      outcome = { message: "Your profile has been removed.", kind: "success" };
+      outcome = { message: "Removed successfully.", kind: "success" };
     } catch (err) {
-      if (controller.signal.aborted) return;
+      if (controller.signal.aborted && !timedOut) return;
       outcome = {
-        message: (err as Error).message || "Could not remove your profile.",
+        message: timedOut
+          ? "We couldn’t confirm the removal. Please check again later."
+          : (err as Error).message || "Could not remove your profile.",
         kind: "error",
       };
     } finally {
+      window.clearTimeout(requestTimeout);
       if (removeRequest.current === controller) removeRequest.current = null;
     }
     setToast(outcome);
@@ -682,7 +695,7 @@ export default function RecruitersViewApp({
 
   useEffect(() => {
     if (!toast) return;
-    const timer = window.setTimeout(() => setToast(null), 3000);
+    const timer = window.setTimeout(() => setToast(null), REMOVE_TOAST_DURATION_MS);
     return () => window.clearTimeout(timer);
   }, [toast]);
 
@@ -824,6 +837,7 @@ export default function RecruitersViewApp({
               page={page}
               onNavigate={changePage}
               removing={removing}
+              removeFinished={toast !== null}
               onRemove={() => onRemove(result.profile.handle, result.inputUrl)}
             />
           )}
@@ -887,6 +901,7 @@ function FoundResult({
   page,
   onNavigate,
   removing,
+  removeFinished,
   presentationPending = false,
 }: {
   result: RankLookupFound;
@@ -896,6 +911,7 @@ function FoundResult({
   page: ResultPage;
   onNavigate: (page: ResultPage, result: RankLookupFound) => void;
   removing: boolean;
+  removeFinished: boolean;
   presentationPending?: boolean;
 }) {
   const { state, email, saveEmail, ready } = useCampaign(
@@ -1047,7 +1063,7 @@ function FoundResult({
           </a>
           {result.inputUrl ? (
             <button type="button" disabled={removing} onClick={onRemove}>
-              {removing ? "Removing…" : "Remove me"}
+              {removing ? (removeFinished ? "Returning…" : "Removing…") : "Remove me"}
             </button>
           ) : null}
         </div>
