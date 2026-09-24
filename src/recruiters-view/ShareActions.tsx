@@ -35,8 +35,7 @@ export default function ShareActions({ result, width, prepareImage = true }: { r
   }, [identity, result.taskId, result.revision, result.rankedAt]);
   useEffect(() => { if (copied) { const timer = window.setTimeout(() => setCopied(false), 2400); return () => clearTimeout(timer); } }, [copied]);
   async function copy() {
-    if (!shareUrl) return;
-    try { await navigator.clipboard.writeText(shareUrl); setCopied(true); setError(''); trackCampaign('share', { channel: 'copy' }); }
+    try { await navigator.clipboard.writeText(`${post} ${window.location.href}`); setCopied(true); setError(''); trackCampaign('share', { channel: 'copy' }); }
     catch { setError('Could not copy the share text. Please try again.'); }
   }
   return <div className={`rv-share-actions is-${primary}-primary`} data-theme={cardThemeName(result.ranking)} aria-label="Share your ranking">
