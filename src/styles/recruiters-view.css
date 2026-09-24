@@ -133,17 +133,6 @@
   text-align: left;
 }
 
-.rv-lookup-retry {
-  margin: 8px 2px 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--rv-ink);
-  font: inherit;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
 .rv-boards-head h2,
 .rv-result-block h3,
 .rv-people-head h3,
