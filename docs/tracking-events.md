@@ -70,7 +70,7 @@
 | Improve ranking | `navigate.click` | `destination=improve`，随后 `improve` PV |
 | Explore opportunities | `navigate.click` | `destination=opportunities`，随后 `opportunities` PV |
 | Share on X / LinkedIn | `share.click` | `channel=x` / `linkedin`；仅代表点击分享入口 |
-| Copy link / Copied | `share_copy_attempt.click` | 剪贴板写入成功后另记 `share.click`，`channel=copy`；失败仅有点击事件 |
+| Copy link / Copied | `share_copy_attempt.click` | 复制与 LinkedIn 相同的分享文案，加上点击时当前页面的 URL；剪贴板写入成功后另记 `share.click`，`channel=copy`；失败仅有点击事件 |
 | Download card | `card_download.click` | `format=png`；仅代表点击下载链接 |
 | Retry download | `card_download_retry.click` | 仅图片生成失败且重试按钮可点击时发送 |
 | Remove me | `remove_profile.click` | 请求成功或失败都会显示 toast，约 1.8 秒后返回入口；点击事件不代表服务端移除成功 |
