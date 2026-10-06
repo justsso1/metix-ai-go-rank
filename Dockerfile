@@ -17,5 +17,5 @@ COPY nginx/40-campaign-upstreams.sh /app/40-campaign-upstreams.sh
 COPY nginx/start.sh /app/start.sh
 RUN chmod +x /app/40-campaign-upstreams.sh /app/start.sh
 EXPOSE 80
-HEALTHCHECK --interval=30s --timeout=3s CMD wget -q -O /dev/null http://127.0.0.1/recruiters-view/ || exit 1
+HEALTHCHECK --interval=30s --timeout=3s CMD wget -q -O /dev/null http://127.0.0.1/healthz || exit 1
 CMD ["/app/start.sh"]
