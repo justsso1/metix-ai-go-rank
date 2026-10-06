@@ -6,7 +6,13 @@ RUN npm ci --no-audit --no-fund
 COPY . .
 RUN npm run build
 FROM node:22-alpine
-RUN apk add --no-cache nginx ca-certificates
+# The apk nginx package logs to files inside the container, unlike the official
+# nginx image, so without these links the logs never reach the platform collector
+# and are lost whenever the container is replaced.
+RUN apk add --no-cache nginx ca-certificates \
+ && mkdir -p /var/log/nginx \
+ && ln -sf /dev/stdout /var/log/nginx/access.log \
+ && ln -sf /dev/stderr /var/log/nginx/error.log
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=builder /app/node_modules /app/node_modules
