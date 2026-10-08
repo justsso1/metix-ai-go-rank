@@ -6,13 +6,7 @@ RUN npm ci --no-audit --no-fund
 COPY . .
 RUN npm run build
 FROM node:22-alpine
-# The apk nginx package logs to files inside the container, unlike the official
-# nginx image, so without these links the logs never reach the platform collector
-# and are lost whenever the container is replaced.
-RUN apk add --no-cache nginx ca-certificates \
- && mkdir -p /var/log/nginx \
- && ln -sf /dev/stdout /var/log/nginx/access.log \
- && ln -sf /dev/stderr /var/log/nginx/error.log
+RUN apk add --no-cache nginx ca-certificates
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=builder /app/node_modules /app/node_modules
@@ -23,5 +17,5 @@ COPY nginx/40-campaign-upstreams.sh /app/40-campaign-upstreams.sh
 COPY nginx/start.sh /app/start.sh
 RUN chmod +x /app/40-campaign-upstreams.sh /app/start.sh
 EXPOSE 80
-HEALTHCHECK --interval=30s --timeout=3s CMD wget -q -O /dev/null http://127.0.0.1/healthz || exit 1
+HEALTHCHECK --interval=30s --timeout=3s CMD wget -q -O /dev/null http://127.0.0.1/recruiters-view/ || exit 1
 CMD ["/app/start.sh"]

@@ -303,10 +303,6 @@ function acceptedTask(data: unknown): AcceptedTask | null {
   return { taskId: task.taskId, queryToken: task.queryToken };
 }
 
-// Polling has to give up on its own. A task that never reaches a terminal state
-// would otherwise leave every open tab calling the ranking service forever.
-const POLL_TIMEOUT_MS = 180_000;
-
 export async function lookupPeerRank(
   url: string,
   handle: string,
@@ -314,7 +310,6 @@ export async function lookupPeerRank(
     onProgress?: (progress: LookupProgress) => void;
     signal?: AbortSignal;
     pollMs?: number;
-    timeoutMs?: number;
   } = {},
 ): Promise<RankLookupResult> {
   options.onProgress?.({ step: "profile" });
@@ -325,7 +320,6 @@ export async function lookupPeerRank(
     options.onProgress?.({ step: "rank" });
   })();
   const pollMs = options.pollMs ?? 2_000;
-  const deadline = Date.now() + (options.timeoutMs ?? POLL_TIMEOUT_MS);
 
   try {
     const submitted = await peerRankRequest("/peer-rank/rank", {
@@ -378,9 +372,6 @@ export async function lookupPeerRank(
         if (data) return rankFromPeerRank(url, handle, data, task.taskId);
         if (taskSucceeded(state.status)) throw new Error("The lookup did not finish. Try the URL again.");
       }
-      if (Date.now() >= deadline) {
-        return { status: "invalid", inputUrl: url, message: "This ranking is taking longer than usual. Try the URL again in a few minutes." };
-      }
       await wait(pollMs, options.signal);
     }
     throw new DOMException("Aborted", "AbortError");
@@ -396,12 +387,11 @@ export async function lookupPeerRank(
 /** Resume a ranking task linked from email without submitting another profile lookup. */
 export async function lookupPeerRankTask(
   taskId: string,
-  options: { onProgress?: (progress: LookupProgress) => void; signal?: AbortSignal; pollMs?: number; timeoutMs?: number } = {},
+  options: { onProgress?: (progress: LookupProgress) => void; signal?: AbortSignal; pollMs?: number } = {},
 ): Promise<RankLookupResult> {
   const id = taskId.trim();
   if (!id || id.length > 64) return { status: "invalid", inputUrl: "", message: "This ranking link is invalid." };
   const pollMs = options.pollMs ?? 2_000;
-  const deadline = Date.now() + (options.timeoutMs ?? POLL_TIMEOUT_MS);
   options.onProgress?.({ step: "profile" });
 
   const tokenResponse = await peerRankRequest("/peer-rank/email/result-token", {
@@ -444,9 +434,6 @@ export async function lookupPeerRankTask(
     }
 
     options.onProgress?.({ step: "rank" });
-    if (Date.now() >= deadline) {
-      return { status: "invalid", inputUrl: "", message: "This ranking is taking longer than usual. Try the link again in a few minutes." };
-    }
     await wait(pollMs, options.signal);
   }
   throw new DOMException("Aborted", "AbortError");
