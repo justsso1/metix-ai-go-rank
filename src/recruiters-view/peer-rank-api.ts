@@ -74,13 +74,17 @@ function yearsFromLabel(label: string): number {
 }
 
 function yoeBand(label: string): string {
-  const plus = label.match(/(\d+(?:\.\d+)?)\+\s*yr/i);
-  if (plus) return `${intYear(plus[1])}+ yr`;
-  const range = label.match(/(\d+(?:\.\d+)?)\s*[–-]\s*(\d+(?:\.\d+)?)\s*yr/i);
-  if (!range) return "";
-  const a = intYear(range[1]);
-  const b = intYear(range[2]);
-  return a === b ? `${a} yr` : `${a}–${b} yr`;
+  for (const raw of label.split("·")) {
+    const text = raw.trim();
+    const plus = text.match(/(\d+(?:\.\d+)?)\+\s*yr(.*)$/i);
+    if (plus) return `${intYear(plus[1])}+ yr${plus[2]}`.trim();
+    const range = text.match(/(\d+(?:\.\d+)?)\s*[–-]\s*(\d+(?:\.\d+)?)\s*yr(.*)$/i);
+    if (!range) continue;
+    const a = intYear(range[1]);
+    const b = intYear(range[2]);
+    return `${a === b ? `${a} yr` : `${a}–${b} yr`}${range[3]}`.trim();
+  }
+  return "";
 }
 
 function asPerson(card: PeerRankCard, id: string): RankedPerson {

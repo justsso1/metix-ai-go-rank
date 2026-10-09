@@ -21,14 +21,14 @@ export function qualifiesForJobs(ranking: RankDisplay): boolean {
 }
 
 function integerYoePiece(text: string): string {
-  const plus = text.match(/^(\d+(?:\.\d+)?)\+\s*yr$/i);
-  if (plus) return `${Math.round(Number(plus[1]))}+ yr`;
-  const range = text.match(/^(\d+(?:\.\d+)?)\s*[–-]\s*(\d+(?:\.\d+)?)\s*yr$/i);
+  const plus = text.match(/^(\d+(?:\.\d+)?)\+\s*yr(.*)$/i);
+  if (plus) return `${Math.round(Number(plus[1]))}+ yr${plus[2]}`.trim();
+  const range = text.match(/^(\d+(?:\.\d+)?)\s*[–-]\s*(\d+(?:\.\d+)?)\s*yr(.*)$/i);
   if (!range) return text;
   const a = Math.round(Number(range[1]));
   const b = Math.round(Number(range[2]));
   if (!Number.isFinite(a) || !Number.isFinite(b)) return text;
-  return a === b ? `${a} yr` : `${a}–${b} yr`;
+  return `${a === b ? `${a} yr` : `${a}–${b} yr`}${range[3]}`.trim();
 }
 
 export function scopeLabel(query: SearchQuery): string {
