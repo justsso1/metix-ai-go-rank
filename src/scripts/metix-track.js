@@ -35,6 +35,7 @@
   const ATTRIBUTION_VERSION = 1;
   const ATTRIBUTION_EXPIRY_MS = 14 * 24 * 60 * 60 * 1000;
   const ATTRIBUTION_KEYS = [
+    "src",
     "utm_source",
     "utm_medium",
     "utm_campaign",

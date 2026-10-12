@@ -151,6 +151,8 @@ data-track="email_submit_click" data-track-source="ranking_update"
 - `analytics.ts` 的业务事件白名单之外的键全部丢掉。字符串不符合分类值格式也丢掉；声明式 `data-track-*` 另由 SDK 读取，新增字段需人工保持为非个人信息的分类值。
 - 分享 URL、外链 target、referrer 只保留本站规范路径或外部 origin；`/show/{taskId}` 记录为 `/show/:taskId`，`/share/{taskId}` 记录为 `/share/:taskId`。
 - 归因参数由独立脚本保存并由 SDK 带入事件，不经过业务属性白名单；投放链接需保证 UTM / 点击标识不含个人信息。
+- 社交分享链接支持 `?src=linkedin` 等简写，Cookie 保留 `src`，SDK 自动在事件 `properties.src` 中上报；同时补齐 `utm_source` 供主站和注册归因使用。非空 `utm_source` 优先于 `src`，两者同时传入时分别保留其值；空白值忽略，来源值去除首尾空格并限制为 255 字符。主站跳转链接只补齐标准归因字段，不额外附加 `src`。`src` 随归因 Cookie 在本站后续页面延续，新的归因访问会整组替换旧数据。
+- 归因脚本自动为指向 `metix.ai` / `www.metix.ai` 的 HTTP(S) 链接补齐有效 Cookie 中的 UTM / 点击标识（无来源时为 `utm_source=direct`），保留目标链接已有的同名参数、其他参数和锚点。动态插入或修改的链接同样处理，其他域名不处理。条款 `/terms-of-service` 和隐私政策 `/privacy-policy` 链接不自动附加归因参数。主站可读取 URL 参数并在注册时提交归因；本仓库不包含主站注册接口的接入。
 - 页面标题固定成 `Metix Rank — <scene>`，不用文档标题。
 - 异常全部吞掉。埋点失败不能影响查询、邮件和退订。
 
