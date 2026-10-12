@@ -135,6 +135,7 @@ export function rankingCardSvg(result: RankLookupFound, width = 640, assets: Car
   const frame = podiumFrame(result.ranking.kind === 'exact' ? result.ranking.rank : undefined);
   const type = cardThemeName(result.ranking), material = STORY_FOILS[type], finish = STORY_NUMBER_FINISH[type];
   const ink = STORY_COLORS.accents[type], muted = STORY_COLORS.secondary;
+  const coat = type === 'standard' ? STORY_FOILS.standard.coat : '#fff';
   const prefix = 'card-' + result.profile.handle.replace(/[^a-z0-9-]/gi, '') + '-' + l.width;
   const id = (s: string) => `${prefix}-${s}`;
   const url = (s: string) => `url(#${id(s)})`;
@@ -172,12 +173,12 @@ export function rankingCardSvg(result: RankLookupFound, width = 640, assets: Car
     ${type==='standard'?`
     <radialGradient id="${id('opal-near')}" cx="1" cy=".85" r=".7"><stop stop-color="${material.near}"/><stop offset="1" stop-color="${material.near}" stop-opacity="0"/></radialGradient>
     <radialGradient id="${id('opal-far')}" cx="1" cy="1" r=".7"><stop stop-color="${material.far}"/><stop offset="1" stop-color="${material.far}" stop-opacity="0"/></radialGradient>
-    <linearGradient id="${id('opal-reflection')}" x1="0" y1="0" x2="1" y2=".65"><stop offset=".14" stop-color="#fff" stop-opacity="0"/><stop offset=".27" stop-color="#fff" stop-opacity=".08"/><stop offset=".39" stop-color="#fff" stop-opacity=".5"/><stop offset=".46" stop-color="#fff" stop-opacity=".16"/><stop offset=".59" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <linearGradient id="${id('opal-reflection')}" x1="0" y1="0" x2="1" y2=".65"><stop offset=".14" stop-color="#fff" stop-opacity="0"/><stop offset=".27" stop-color="#fff" stop-opacity=".08"/><stop offset=".39" stop-color="#fff" stop-opacity=".3"/><stop offset=".46" stop-color="#fff" stop-opacity=".16"/><stop offset=".59" stop-color="#fff" stop-opacity="0"/></linearGradient>
     <linearGradient id="${id('opal-edge')}" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff"/><stop offset=".3" stop-color="#ccebf3" stop-opacity=".75"/><stop offset=".52" stop-color="#fff" stop-opacity=".45"/><stop offset=".78" stop-color="#d9cbe9" stop-opacity=".7"/><stop offset="1" stop-color="#fff" stop-opacity=".87"/></linearGradient>
     <radialGradient class="rv-art-number-light" id="${id('number-light')}" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="80"><stop stop-color="#fff" stop-opacity=".55"/><stop offset=".34" stop-color="#fff" stop-opacity=".16"/><stop offset=".75" stop-color="#fff" stop-opacity="0"/></radialGradient>
     <filter id="${id('opal-relief')}" x="-5%" y="-5%" width="110%" height="110%"><feComponentTransfer><feFuncR type="linear" slope="1.428" intercept="-.095"/><feFuncG type="linear" slope="1.428" intercept="-.095"/><feFuncB type="linear" slope="1.428" intercept="-.095"/></feComponentTransfer><feDropShadow dx="-.8" dy="-1" stdDeviation=".5" flood-color="#fff" flood-opacity=".93"/><feDropShadow dx="1.4" dy="2.2" stdDeviation="1.4" flood-color="#526d8c" flood-opacity=".28"/></filter>
     `:''}
-    <linearGradient id="${id('coat')}" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff" stop-opacity=".18"/><stop offset=".3" stop-color="#fff" stop-opacity=".52"/><stop offset=".65" stop-color="#fff" stop-opacity=".15"/><stop offset="1" stop-color="#fff" stop-opacity=".32"/></linearGradient>
+    <linearGradient id="${id('coat')}" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${coat}" stop-opacity=".18"/><stop offset=".3" stop-color="${coat}" stop-opacity=".52"/><stop offset=".65" stop-color="${coat}" stop-opacity=".15"/><stop offset="1" stop-color="${coat}" stop-opacity=".32"/></linearGradient>
     <linearGradient id="${id('number')}" x1="0" y1="0" x2=".6" y2="1"><stop stop-color="${finish.highlight}"/><stop offset=".28" stop-color="${finish.light}"/><stop offset=".72" stop-color="${ink}"/><stop offset="1" stop-color="${finish.dark}"/></linearGradient>
     <linearGradient id="${id('glass')}" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff" stop-opacity=".53"/><stop offset=".55" stop-color="#fff" stop-opacity=".26"/><stop offset="1" stop-color="#fff" stop-opacity=".4"/></linearGradient>
     <filter id="${id('raised')}" x="-15%" y="-20%" width="140%" height="160%"><feDropShadow dx="1.4" dy="4.5" stdDeviation="2" flood-color="#31203d" flood-opacity=".2"/></filter>
@@ -192,11 +193,11 @@ export function rankingCardSvg(result: RankLookupFound, width = 640, assets: Car
       ${type==='standard'?`<rect width="100%" height="100%" fill="${url('opal-near')}"/><rect width="100%" height="100%" fill="${url('opal-far')}"/>`:''}
       <rect width="100%" height="100%" fill="${url('corner')}"/>
       ${image(assets.foil ?? STORY_TEXTURE,0,l.headerBottom-70,l.width,l.width*1.14,`opacity=".8"${type==='standard'?` filter="${url('opal-relief')}"`:''}`)}
-      <rect width="100%" height="100%" fill="${url('coat')}"/>
-      ${image(assets.silk ?? STORY_SILK,0,0,l.width,height,`preserveAspectRatio="none" opacity="${type==='standard'?'.46':'.9'}"`)}
+      <rect width="100%" height="100%" fill="${url('coat')}"${type==='standard'?' opacity=".5"':''}/>
+      ${image(assets.silk ?? STORY_SILK,0,0,l.width,height,`preserveAspectRatio="none" opacity="${type==='standard'?'.34':'.9'}"`)}
       <rect width="100%" height="100%" fill="${url('grain')}" opacity="${type==='standard'?'.14':'.2'}" style="mix-blend-mode:soft-light"/>
       ${type==='standard'?`<rect width="100%" height="100%" fill="${url('opal-reflection')}"/>`:''}
-      <rect width="100%" height="100%" fill="#ffffff" fill-opacity=".16"/>
+      <rect width="100%" height="100%" fill="${type==='standard'?coat:'#ffffff'}" fill-opacity="${type==='standard'?'.05':'.16'}"/>
     </g>
     ${text('YOUR RECRUITER VIEW',pad,36,9,STORY_COLORS.label,550,'Geist, sans-serif','letter-spacing="1.35"')}
     ${multiline(l.scope,pad,57,11,16,muted)}

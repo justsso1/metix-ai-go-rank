@@ -120,22 +120,23 @@ html:has(#recruiters-view-campaign) {
   transition: background .16s ease, border-color .16s ease;
 }
 .rv-share-channels a:hover, .rv-share-channels button:hover { background: #dfd2ff; border-color: #eadfff; }
-/* Metallic share palettes from Zhaoyuan's PK branch; keep our four-button layout. */
+/* Theme-matched share palettes; keep our four-button layout. */
+.rv-share-actions[data-theme="standard"] { --share-top: #BCC7C7; --share-bottom: #A7A3B8; --share-ink: #34414D; --share-edge: #D2DADB; --share-glow: #96BAB82e; }
 .rv-share-actions[data-theme="gold"] { --share-top: #f6e9c9; --share-bottom: #ddc38b; --share-ink: #473513; --share-edge: #f4dfa8; --share-glow: #dcb85530; }
 .rv-share-actions[data-theme="silver"] { --share-top: #edf2f8; --share-bottom: #c3cddc; --share-ink: #303947; --share-edge: #ecf2fc; --share-glow: #c9dbee2e; }
 .rv-share-actions[data-theme="bronze"] { --share-top: #eed9cc; --share-bottom: #c49a83; --share-ink: #423028; --share-edge: #f1d6c2; --share-glow: #d09e792e; }
-.rv-share-actions.is-share-primary:not([data-theme="standard"]) .rv-share-channels :is(a,button) {
+.rv-share-actions.is-share-primary .rv-share-channels :is(a,button) {
   color: var(--share-ink); border-color: color-mix(in srgb, var(--share-edge) 76%, transparent);
   background: radial-gradient(ellipse at 12% 0%, #ffffff52, transparent 68%), linear-gradient(145deg, var(--share-top), var(--share-bottom));
   text-shadow: 0 .5px 0 #ffffff40;
   box-shadow: inset 0 1px 0 #ffffffa6, inset 0 -1px 0 color-mix(in srgb, var(--share-ink) 12%, transparent), 0 4px 12px #08051226;
 }
-.rv-share-actions.is-share-primary:not([data-theme="standard"]) .rv-share-channels :is(a,button):hover:not(:disabled) {
+.rv-share-actions.is-share-primary .rv-share-channels :is(a,button):hover:not(:disabled) {
   border-color: var(--share-edge);
   background: linear-gradient(120deg, #ffffff38, #ffffff66 36%, #ffffff12 72%), linear-gradient(145deg, var(--share-top), var(--share-bottom));
   box-shadow: inset 0 1px 0 #ffffffd9, inset 0 -1px 0 #ffffff26, 0 7px 22px var(--share-glow);
 }
-.rv-share-actions.is-share-primary:not([data-theme="standard"]) .rv-share-channels :is(a,button):focus-visible { outline-color: var(--share-edge); }
+.rv-share-actions.is-share-primary .rv-share-channels :is(a,button):focus-visible { outline-color: var(--share-edge); }
 .is-improve-primary .rv-share-channels :is(a,button) { background: transparent; color: var(--text-2); border-color: var(--rv-line); box-shadow: none; }
 .is-improve-primary .rv-share-channels :is(a,button):hover { background: #ffffff0a; border-color: #9b8dad; color: var(--text); }
 .rv-board-entry { box-shadow: inset 0 1px 0 #ffffff04; }

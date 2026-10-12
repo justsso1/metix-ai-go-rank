@@ -1,7 +1,7 @@
 import type { RankDisplay } from './types';
 
 export const CARD_THEMES = {
-  standard: { name: 'Opal silver', base: '#f5f8fa', ink: '#505963', edge: '#bdcbd7', glow: ['#dceff4', '#e5def0', '#ffffff'], tiltX: 1.5, tiltY: 2, lift: 2 },
+  standard: { name: 'Mist opal', base: '#AEB7C2', ink: '#43505D', edge: '#AEB7C2', glow: ['#96BAB8', '#AFA1C2', '#D4CDDF'], tiltX: 1.5, tiltY: 2, lift: 2 },
   gold: { name: 'Champagne gold', base: '#fffdf5', ink: '#89621c', edge: '#d2b97a', glow: ['#f4d0e9', '#d7f4e9', '#f2dda6'], tiltX: 4, tiltY: 6, lift: 4 },
   silver: { name: 'Ice silver', base: '#f8fcff', ink: '#52667e', edge: '#b6c9db', glow: ['#d3eafb', '#e5ddfa', '#edf5f9'], tiltX: 4, tiltY: 6, lift: 4 },
   bronze: { name: 'Rose copper', base: '#fff8f3', ink: '#a3634c', edge: '#d7a18c', glow: ['#f5c9c3', '#f3dfba', '#dfd4ef'], tiltX: 4, tiltY: 6, lift: 4 },
