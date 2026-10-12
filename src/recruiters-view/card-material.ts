@@ -2,16 +2,16 @@ import { FOIL_STOPS, type CardThemeName } from './card-theme.ts';
 
 // Visual tokens from codex/recruiters-glass-leaderboard-zhaoyuan.
 // Candidate content and motion remain owned by the campaign.
-// The PK branch's Opal silver (pewter) is the default outside the top 30%.
+// Mist opal is the default outside the top 30%.
 export const STORY_COLORS = {
   text: '#292332',
   secondary: '#4c4257',
   label: '#51465c',
-  accents: { standard: '#505963', gold: '#674816', silver: '#465164', bronze: '#784632' } satisfies Record<CardThemeName, string>,
+  accents: { standard: '#43505D', gold: '#674816', silver: '#465164', bronze: '#784632' } satisfies Record<CardThemeName, string>,
 } as const;
 
 export const STORY_NUMBER_FINISH = {
-  standard: { highlight: '#b4bdc8', light: '#87929f', dark: '#39434e' },
+  standard: { highlight: '#A3B6BD', light: '#73878E', dark: '#34414D' },
   gold: { highlight: '#c2ab7b', light: '#96743d', dark: '#593d14' },
   silver: { highlight: '#b8c3d1', light: '#8593a5', dark: '#384456' },
   bronze: { highlight: '#c59e87', light: '#a5755e', dark: '#633826' },
@@ -26,9 +26,9 @@ export const STORY_GLASS_COLORS = {
 
 export const STORY_FOILS = {
   standard: {
-    edge: '#bdcbd7',
-    palette: ['#b8c5d1', '#cbdce5', '#dfeaf0', '#f2f7fa', '#ffffff', '#edf5f5', '#d6e6e7', '#d4d8e7', '#ded7ec', '#eef0f7'],
-    corner: '#f1fbff', near: '#d9f0ed66', far: '#c9bce15c', reflection: '#e8e2fa80',
+    edge: '#AEB7C2', coat: '#B8C1CC',
+    palette: ['#84AAA9', '#9EBFBB', '#B3C8C2', '#BCC7C7', '#AEB7C2', '#A5BBBB', '#96BAB8', '#A7A3B8', '#AFA1C2', '#C2B6CE'],
+    corner: '#BDCFCB', near: '#7CA6A06B', far: '#A794B976', reflection: '#D4CDDF',
   },
   gold: {
     edge: '#d8b365',
