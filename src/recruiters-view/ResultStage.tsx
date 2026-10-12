@@ -12,6 +12,7 @@ import { STORY_COLORS, STORY_FOILS, STORY_NUMBER_FINISH, rankingStoryFoilColors 
 import { cardStory } from './card-story';
 import ShareActions from './ShareActions';
 import PodiumBadge from './PodiumBadge';
+import ProfileAvatar, { useAvatarSource } from './ProfileAvatar';
 import type { RankLookupFound, RankedPerson } from './types';
 import LeaderboardOmission from './LeaderboardOmission';
 
@@ -154,7 +155,7 @@ export default function ResultStage({ result, reveal, ready, updated = false, on
 function Identity({ person, shared = false, full = false }: { person: RankedPerson; shared?: boolean; full?: boolean }) {
   return <div className={`rv-identity ${full ? 'is-full' : ''}`}>
     <motion.div layoutId={shared ? 'avatar' : undefined} layout="position" className="rv-identity-avatar" aria-hidden="true">
-      {person.avatar ? <img src={person.avatar} alt="" /> : person.fullName.slice(0, 1)}
+      <ProfileAvatar avatar={person.avatar} />
       <PodiumBadge rank={person.rank} />
     </motion.div>
     <div className="rv-identity-copy"><motion.b layoutId={shared ? 'name' : undefined} layout="position">{person.fullName}</motion.b><p>{full ? person.headline : `${person.title} · ${person.company}`}</p></div>
@@ -165,6 +166,7 @@ export function RankingCard({ result, interactive = false, shared = false, revea
   result: RankLookupFound; interactive?: boolean; shared?: boolean; reveal?: boolean; share?: boolean; prepareImage?: boolean;
 }) {
   const sensor = useRef<HTMLDivElement>(null);
+  const avatar = useAvatarSource(result.profile.avatar);
   const reduced = useReducedMotion();
   const themeName = cardThemeName(result.ranking);
   const theme = CARD_THEMES[themeName];
@@ -192,8 +194,8 @@ export function RankingCard({ result, interactive = false, shared = false, revea
     return () => observer.disconnect();
   }, []);
   const geometry = useMemo(() => cardLayout(result, width), [result, width]);
-  const artwork = useMemo(() => rankingCardSvg(result, width), [result, width]);
-  useNumberReflection(sensor, interactive && !reduced && themeName === 'standard', result, width);
+  const artwork = useMemo(() => rankingCardSvg(result, width, { avatar: avatar.source, avatarPlaceholder: true }), [result, width, avatar.source]);
+  useNumberReflection(sensor, interactive && !reduced && themeName === 'standard', result, width, artwork);
   return <div className="rv-card-with-actions">
     <div ref={sensor} className="rv-card-sensor" style={{ aspectRatio: `${geometry.width} / ${geometry.height}` } as CSSProperties}>
       <div className="rv-card-flight">
@@ -201,9 +203,13 @@ export function RankingCard({ result, interactive = false, shared = false, revea
         '--card-colors': rankingStoryFoilColors(themeName), '--rainbow-angle': angle, '--rainbow-shift': shift,
         '--foil-x': foilX, '--foil-y': foilY, '--foil-band-x': bandX, '--foil-band-y': bandY, '--foil-active': pointer.strength,
         viewTransitionName: 'ranking-card', rotateX, rotateY, y: lift, transformPerspective: 1100 } as MotionStyle}>
-        <div className="rv-card-artwork" dangerouslySetInnerHTML={{ __html: artwork }} />
+        <div className={`rv-card-artwork${avatar.isLoading ? ' is-avatar-loading' : ''}`} dangerouslySetInnerHTML={{ __html: artwork }} onLoadCapture={event => {
+          if (avatar.isLoading && event.target instanceof SVGImageElement && event.target.hasAttribute('data-profile-avatar') && event.target.getAttribute('href') === avatar.source) avatar.onLoad();
+        }} onErrorCapture={event => {
+          if (event.target instanceof SVGImageElement && event.target.hasAttribute('data-profile-avatar') && event.target.getAttribute('href') === avatar.source) avatar.onError();
+        }} />
         {shared && <div className="rv-card-continuity" aria-hidden="true">
-          <motion.div layoutId="avatar" layout="position" className="rv-identity-avatar" style={{ position: 'absolute', left: geometry.pad, top: geometry.identityY, width: 48, height: 48 }}>{result.profile.avatar ? <img src={result.profile.avatar} alt="" /> : result.profile.fullName[0]}<PodiumBadge rank={result.ranking.kind === 'exact' ? result.ranking.rank : undefined} /></motion.div>
+          <motion.div layoutId="avatar" layout="position" className="rv-identity-avatar" style={{ position: 'absolute', left: geometry.pad, top: geometry.identityY, width: 48, height: 48 }}><ProfileAvatar avatar={result.profile.avatar} /><PodiumBadge rank={result.ranking.kind === 'exact' ? result.ranking.rank : undefined} /></motion.div>
           <motion.b layoutId="name" layout="position" style={{ position: 'absolute', left: geometry.pad + 61, top: geometry.nameY - geometry.nameSize, fontSize: geometry.nameSize, lineHeight: '24px', fontWeight: 600, maxWidth: geometry.inner - 61 }}>{result.profile.fullName}</motion.b>
           <motion.strong layoutId="rank" layout="position" style={{ position: 'absolute', left: geometry.rankX, top: geometry.rankY - geometry.rankSize, font: `620 ${geometry.rankSize}px/1 Sora, sans-serif`, letterSpacing: geometry.rankSpacing, color: ink }}><span className="rv-glass-rank">{geometry.hasHash && <span style={{ fontSize: geometry.hashSize, fontWeight: 350, letterSpacing: 0, marginRight: 8 }}>#</span>}{geometry.rankDigits}</span></motion.strong>
         </div>}
@@ -222,8 +228,17 @@ export function RankingCard({ result, interactive = false, shared = false, revea
 }
 
 /** Keep the imported pointer light on our shared SVG, without changing rank geometry. */
-function useNumberReflection(sensor: RefObject<HTMLElement | null>, enabled: boolean, result: RankLookupFound, width: number) {
+function useNumberReflection(sensor: RefObject<HTMLElement | null>, enabled: boolean, result: RankLookupFound, width: number, artwork: string) {
   const light = useSpring(0, { stiffness: 220, damping: 30 });
+  const position = useRef<{ result: RankLookupFound; width: number; transform: string } | null>(null);
+  useLayoutEffect(() => {
+    const surface = sensor.current, current = position.current;
+    // Avatar load/error can replace the SVG while the pointer light is settled.
+    // Restore that light only when the rank geometry and interaction stay the same.
+    if (!enabled || !surface || current?.result !== result || current.width !== width) return;
+    surface.querySelector('.rv-art-number-light')?.setAttribute('gradientTransform', current.transform);
+    surface.querySelector('.rv-art-number-reflection')?.setAttribute('opacity', String(light.get()));
+  }, [sensor, enabled, result, width, artwork, light]);
   useEffect(() => {
     const surface = sensor.current;
     if (!surface) return;
@@ -244,7 +259,9 @@ function useNumberReflection(sensor: RefObject<HTMLElement | null>, enabled: boo
       const matrix = rank.getScreenCTM();
       if (!matrix) return;
       const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(matrix.inverse());
-      gradient.setAttribute('gradientTransform', `translate(${point.x} ${point.y}) scale(1 .8125)`);
+      const transform = `translate(${point.x} ${point.y}) scale(1 .8125)`;
+      position.current = { result, width, transform };
+      gradient.setAttribute('gradientTransform', transform);
       light.set(1);
     };
     surface.addEventListener('pointermove', move);

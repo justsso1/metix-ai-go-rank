@@ -2,10 +2,11 @@ import { cardLayout, rankingCardSvg } from './ranking-card';
 import { cardThemeName } from './card-theme';
 import { STORY_TEXTURE, STORY_GRAIN, STORY_SILK, rankingStoryLogo } from './card-material';
 import { podiumFrame } from './podium-frame';
+import { DEFAULT_AVATAR } from './avatar';
 import type { RankLookupFound } from './types';
 const assets = new Map<string, Promise<string>>();
-function inlineAsset(path: string) {
-  if (!assets.has(path)) assets.set(path, fetch(path).then(response => {
+function inlineAsset(path: string, signal?: AbortSignal) {
+  if (!assets.has(path)) assets.set(path, fetch(path, { signal }).then(response => {
     if (!response.ok) throw new Error('Image asset unavailable');
     return response.blob();
   }).then(blob => new Promise<string>((resolve, reject) => {
@@ -13,10 +14,22 @@ function inlineAsset(path: string) {
   })).catch(error => { assets.delete(path); throw error; }));
   return assets.get(path)!;
 }
+async function inlineAvatar(path?: string) {
+  if (!path) return DEFAULT_AVATAR;
+  try {
+    const source = await inlineAsset(path, AbortSignal.timeout(5_000));
+    const image = new Image(); image.src = source;
+    await image.decode();
+    return source;
+  } catch {
+    assets.delete(path);
+    return DEFAULT_AVATAR;
+  }
+}
 export async function createShareCardPng(result: RankLookupFound, width = 640): Promise<Blob> {
   const frame = podiumFrame(result.ranking.kind === 'exact' ? result.ranking.rank : undefined);
   const [avatar, foil, grain, silk, logo, geist, sora, avatarFrame] = await Promise.all([
-    result.profile.avatar ? inlineAsset(result.profile.avatar) : undefined,
+    inlineAvatar(result.profile.avatar),
     inlineAsset(STORY_TEXTURE), inlineAsset(STORY_GRAIN), inlineAsset(STORY_SILK),
     inlineAsset(rankingStoryLogo(cardThemeName(result.ranking))),
     inlineAsset('/assets/fonts/geist-sans.woff2'), inlineAsset('/assets/fonts/sora.woff2'),

@@ -25,6 +25,8 @@
 .rv-identity { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
 .rv-identity-avatar { height: 35px; width: 35px; flex: none; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #ece9f8; color: var(--accent); }
 .rv-identity-avatar img:not(.rv-podium-badge) { display: block; height: 100%; width: 100%; object-fit: cover; }
+.rv-profile-avatar { background-color: #ece9f8; border-radius: 50%; }
+.rv-card-artwork:not(.is-avatar-loading) .rv-art-avatar-placeholder { visibility: hidden; }
 .rv-board-entry .rv-identity-avatar, .rv-card-continuity .rv-identity-avatar { position: relative; overflow: visible; }
 .rv-identity-avatar img:not(.rv-podium-badge) { border-radius: inherit; }
 .rv-podium-badge { display: block; pointer-events: none; }
