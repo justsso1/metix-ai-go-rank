@@ -2,6 +2,7 @@
   "use strict";
 
   const ATTRIBUTION_KEYS = [
+    "src",
     "utm_source",
     "utm_medium",
     "utm_campaign",
@@ -47,6 +48,13 @@
       const value = params.get(key);
       if (value !== null) candidate[key] = value;
     });
+
+    // 社交分享链接可用 src 简写；同时补齐 utm_source 供后续归因使用，埋点保留 src。
+    // 显式传入的非空 utm_source 优先。
+    if (!candidate.utm_source || !candidate.utm_source.trim()) {
+      const source = params.get("src");
+      if (source !== null) candidate.utm_source = source;
+    }
 
     return normalizeData(candidate);
   }
@@ -143,6 +151,57 @@
       }
     }
   } catch (_) {
-    // Attribution is best-effort and must never block the page.
+    // 归因失败时忽略错误，不能阻塞页面。
+  }
+
+  function decorateMainSiteLinks() {
+    const stored = readValidAttribution(Date.now());
+    if (!stored) return;
+
+    document.querySelectorAll("a[href]").forEach((link) => {
+      try {
+        const href = link.getAttribute("href");
+        const url = new URL(href, document.baseURI);
+        if (
+          (url.protocol !== "https:" && url.protocol !== "http:") ||
+          (url.hostname !== "metix.ai" && url.hostname !== "www.metix.ai")
+        ) {
+          return;
+        }
+
+        // 条款和隐私政策链接不附加归因参数。
+        const path = url.pathname.replace(/\/$/, "");
+        if (path === "/terms-of-service" || path === "/privacy-policy") return;
+
+        let changed = false;
+        Object.keys(stored.data).forEach((key) => {
+          if (key === "src") return;
+          if (!url.searchParams.has(key)) {
+            url.searchParams.set(key, stored.data[key]);
+            changed = true;
+          }
+        });
+        if (changed) link.setAttribute("href", url.href);
+      } catch (_) {
+        // 单个链接格式错误不能影响其他链接的归因参数补齐。
+      }
+    });
+  }
+
+  try {
+    decorateMainSiteLinks();
+    // 为 React 动态渲染或后续修改 href 的链接补齐参数，
+    // 同时支持在新标签页打开和直接复制链接。
+    if (typeof MutationObserver === "function") {
+      const observer = new MutationObserver(decorateMainSiteLinks);
+      observer.observe(document.documentElement, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["href"],
+      });
+    }
+  } catch (_) {
+    // 链接参数补齐失败时忽略错误，不能阻塞跳转。
   }
 })();
