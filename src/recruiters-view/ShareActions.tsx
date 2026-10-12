@@ -29,7 +29,7 @@ export default function ShareActions({ result, width, prepareImage = true }: { r
       }).catch(() => { if (!cancelled) setError('Could not prepare your card.'); });
     }, 150);
     return () => { cancelled = true; window.clearTimeout(timer); if (objectUrl) URL.revokeObjectURL(objectUrl); };
-  }, [identity, result.recruiterReplyScore, comparisonKey, width, retry, prepareImage]);
+  }, [identity, result.profile.avatar, result.recruiterReplyScore, comparisonKey, width, retry, prepareImage]);
   useEffect(() => {
     setShareUrl(resultShareUrl(result, window.location.origin));
   }, [identity, result.taskId, result.revision, result.rankedAt]);

@@ -5,10 +5,11 @@ import { scopeLabel } from './campaign.ts';
 import { cardStory, rankingCardStats } from './card-story.ts';
 import { podiumFrame } from './podium-frame.ts';
 import { keywordTextWidth } from './keyword-metrics.ts';
+import { DEFAULT_AVATAR } from './avatar.ts';
 import type { RankLookupFound } from './types';
 export { PEOPLE_PER_PAGE, rankingCardStats } from './card-story.ts';
 
-export type CardAssets = { avatar?: string; foil?: string; grain?: string; silk?: string; logo?: string; fontCss?: string; podiumFrame?: string };
+export type CardAssets = { avatar?: string; avatarPlaceholder?: boolean; foil?: string; grain?: string; silk?: string; logo?: string; fontCss?: string; podiumFrame?: string };
 const esc = (s: string | number) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
 const number = (n: number) => new Intl.NumberFormat('en-US').format(n);
 // Shared line breaking, coordinates and typography for the page, PNG and OG.
@@ -130,6 +131,7 @@ export function cardLayout(result: RankLookupFound, width = 640) {
 /** One artwork for the page, the reveal animation, PNG downloads and share previews. */
 export function rankingCardSvg(result: RankLookupFound, width = 640, assets: CardAssets = {}) {
   const l = cardLayout(result, width), { pad, inner, height } = l;
+  const avatar = assets.avatar || result.profile.avatar || DEFAULT_AVATAR;
   const frame = podiumFrame(result.ranking.kind === 'exact' ? result.ranking.rank : undefined);
   const type = cardThemeName(result.ranking), material = STORY_FOILS[type], finish = STORY_NUMBER_FINISH[type];
   const ink = STORY_COLORS.accents[type], muted = STORY_COLORS.secondary;
@@ -201,8 +203,9 @@ export function rankingCardSvg(result: RankLookupFound, width = 640, assets: Car
     ${image(assets.logo ?? rankingStoryLogo(type),l.width-pad-62,22,62,62*224.07/313.68)}
     <path d="M${pad} ${l.headerBottom}h${inner}" stroke="${ink}" stroke-opacity=".11"/>
     <g class="rv-art-identity">
-      <g class="rv-art-avatar"><circle cx="${pad+24}" cy="${l.identityY+24}" r="24" fill="#ece9f8"/>
-      ${(assets.avatar ?? result.profile.avatar) ? image(assets.avatar ?? result.profile.avatar!,pad,l.identityY,48,48,`clip-path="${url('avatar')}"`) : text(result.profile.fullName[0],pad+15,l.identityY+32,24,ink)}
+      <g class="rv-art-avatar"><circle class="rv-art-avatar-background" cx="${pad+24}" cy="${l.identityY+24}" r="24" fill="#ece9f8"/>
+      ${assets.avatarPlaceholder && avatar !== DEFAULT_AVATAR ? image(DEFAULT_AVATAR,pad,l.identityY,48,48,`class="rv-art-avatar-placeholder" clip-path="${url('avatar')}"`) : ''}
+      ${image(avatar,pad,l.identityY,48,48,`clip-path="${url('avatar')}" data-profile-avatar="true"`)}
       ${frame ? image(assets.podiumFrame ?? frame.src,pad+48*frame.x,l.identityY+48*frame.y,48*frame.w,48*frame.h,'class="rv-art-avatar-frame"') : ''}
       </g><g class="rv-art-name">${multiline(l.name,pad+61,l.nameY,l.nameSize,24,STORY_COLORS.text,600)}</g>
       ${multiline(l.headline,pad+61,l.headlineY,12,18,muted)}

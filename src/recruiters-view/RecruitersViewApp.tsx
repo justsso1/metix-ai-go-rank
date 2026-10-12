@@ -3,6 +3,7 @@ import { type FormEvent, useEffect, useRef, useState } from "react";
 import { ArrowLeft, Linkedin } from "lucide-react";
 import ResultStage, { RankingCard } from "./ResultStage";
 import RankingJourney from "./RankingJourney";
+import ProfileAvatar from "./ProfileAvatar";
 import { createPortal, flushSync } from "react-dom";
 import {
   campaignAddress,
@@ -922,9 +923,7 @@ function FoundResult({
             >
               <RankingCard result={result} />
               <div className="rv-task-mobile-identity">
-                {result.profile.avatar && (
-                  <img src={result.profile.avatar} alt="" />
-                )}
+                <ProfileAvatar avatar={result.profile.avatar} />
                 <div>
                   <b>{result.profile.fullName}</b>
                   <p>{scopeLabel(result.query)}</p>

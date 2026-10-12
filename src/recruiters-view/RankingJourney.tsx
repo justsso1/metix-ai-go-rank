@@ -6,6 +6,7 @@ import { scopeLabel } from './campaign';
 import { advancePrelude, assessmentProgress, clamp, DIMENSIONS, ease, EXPAND_DURATION, gridPose, mix, out, PAINT_ORDER, PICKED, poseMix, PRELUDE_END, preludePose, preludeSpeed, rankedEntry, readyListPose, revealLayers, revealTiming, scoreValue, scrollState, selectionSheen, type Pose } from './ranking-motion';
 import type { RankLookupFound, RankedPerson } from './types';
 import PodiumBadge from './PodiumBadge';
+import ProfileAvatar from './ProfileAvatar';
 import LeaderboardOmission from './LeaderboardOmission';
 
 type Destination = { width: number; height: number; mobile: boolean; board: Pose; first: Pose; pitch: number; gap: number; card: Pose; own: Pose; rows: Record<number, Pose> };
@@ -168,7 +169,7 @@ function JourneyCard({ id, pose, time, unit, dock, person, rank, label, selected
       {time >= 6 && time < 10.5 && <div className="rv-journey-scan" style={{ top: `${clamp((time - 6.35 - Math.floor(id / 2) * .16) / 3.35) * 115 - 10}%`, opacity: (1 - ease((time - 9.7 - Math.floor(id / 2) * .16) / .3)) * (1 - morph) }} />}
     </div>
     {rank !== undefined || label ? <div className={`rv-journey-person ${label ? 'is-band' : ''}`} style={{ opacity: identity }}>
-      <span className="rv-journey-rank">{label ?? `#${rank}`}</span><span className="rv-journey-avatar">{person?.avatar ? <img src={person.avatar} alt="" /> : person ? person.fullName[0] : ''}<PodiumBadge rank={person ? rank : undefined} /></span>
+      <span className="rv-journey-rank">{label ?? `#${rank}`}</span><span className="rv-journey-avatar">{person && <ProfileAvatar avatar={person.avatar} />}<PodiumBadge rank={person ? rank : undefined} /></span>
       <div className="rv-journey-person-copy">{person ? <><b>{person.fullName}</b><p>{person.title} · {person.company}</p></> : <><i /><i /></>}</div>
     </div> : null}
     <div className="rv-journey-selection-sheen" style={{ '--selection-sheen-x': `${sheen.x}%`, '--selection-sheen-opacity': sheen.opacity, '--selection-illumination': sheen.illumination } as CSSProperties} />
