@@ -2,6 +2,14 @@
 set -eu
 output=/etc/nginx/campaign-upstreams.conf
 : > "$output"
+# Upstream origins are AWS ELBs whose IPs rotate; a literal proxy_pass host is resolved only once at startup.
+nameserver=$(awk '/^nameserver/ { print $2; exit }' /etc/resolv.conf)
+if [ -z "$nameserver" ]; then
+ echo "No nameserver found in /etc/resolv.conf" >&2; exit 1
+fi
+case "$nameserver" in *:*) nameserver="[$nameserver]" ;; esac
+echo "resolver $nameserver valid=30s ipv6=off;" >> "$output"
+echo "resolver_timeout 5s;" >> "$output"
 write_proxy() {
  route="$1"; upstream="$2"; strip="$3"; prefix="${4:-}"
  if [ -z "$upstream" ]; then
@@ -14,12 +22,15 @@ EOF
   echo "Invalid upstream origin for $route" >&2; exit 1
  fi
  upstream="${upstream%/}"
+ rewrite_rule=""
  if [ "$strip" = yes ]; then
-  upstream="$upstream$prefix/"
+  rewrite_rule="rewrite ^$route(.*)\$ $prefix/\$1 break;"
  fi
  cat >> "$output" <<EOF
 location ^~ $route {
- proxy_pass $upstream;
+ set \$campaign_upstream $upstream;
+ $rewrite_rule
+ proxy_pass \$campaign_upstream;
  proxy_ssl_server_name on;
  proxy_ssl_verify on;
  proxy_ssl_trusted_certificate /etc/ssl/certs/ca-certificates.crt;
