@@ -210,7 +210,8 @@ export function parseLinkedInInput(raw: string): { ok: true; handle: string; url
     if (!/(^|\.)linkedin\.com$/i.test(url.hostname) || url.username || url.password) throw new Error();
     const match = url.pathname.match(/^\/in\/([^/]+)\/?$/i);
     const handle = match ? decodeURIComponent(match[1]).toLowerCase() : "";
-    if (!/^[\p{L}\p{N}_-]+$/u.test(handle) || handle.length > 100) throw new Error();
+    // Emoji handles include variation selectors, skin tones, flag pairs and ZWJ sequences.
+    if (!/^[\p{L}\p{M}\p{N}\p{Extended_Pictographic}\p{Emoji_Modifier}\p{Regional_Indicator}\u200D_-]+$/u.test(handle) || handle.length > 100) throw new Error();
     return { ok: true, handle, url: `https://www.linkedin.com/in/${encodeURIComponent(handle)}` };
   } catch {
     return { ok: false, message: "Use a public LinkedIn profile URL, like linkedin.com/in/your-handle." };
