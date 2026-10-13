@@ -134,3 +134,51 @@ test('invalid profile URLs stop before the ranking service is called', async () 
     assert.equal((await lookupRanking(raw)).status, 'invalid');
   }
 });
+
+for (const flow of ['lookupPeerRank', 'lookupPeerRankTask']) {
+  test(`${flow} rejects malformed polling responses instead of polling indefinitely`, async () => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 100);
+    const api = modules({ fetch: async (_url, init) => ({
+      ok: true, status: 200, headers: new Headers(),
+      json: async () => ({ code: 0, data: init.method === 'POST'
+        ? { taskId: 'test-task', queryToken: 'test-token' }
+        : {} }),
+    }) })('peer-rank-api.ts');
+    try {
+      const options = { signal: controller.signal, pollMs: 1 };
+      await assert.rejects(
+        flow === 'lookupPeerRank'
+          ? api[flow]('https://linkedin.com/in/example', 'example', options)
+          : api[flow]('test-task', options),
+        /The lookup did not finish/,
+      );
+    } finally {
+      clearTimeout(timer);
+      controller.abort();
+    }
+  });
+}
+
+for (const flow of ['lookupPeerRank', 'lookupPeerRankTask']) {
+  for (const phase of flow === 'lookupPeerRank' ? ['submit', 'poll'] : ['poll']) {
+    test(`${flow} maps backend failed status during ${phase} to the fallback result`, async () => {
+      const controller = new AbortController();
+      const api = modules({ fetch: async (_url, init) => ({
+        ok: true, status: 200, headers: new Headers(),
+        json: async () => ({ code: 0, data: phase === 'submit' || init.method === 'GET'
+          ? { status: 'failed', errorMsg: 'Ranking task failed' }
+          : { taskId: 'test-task', queryToken: 'test-token' } }),
+      }) })('peer-rank-api.ts');
+      try {
+        const options = { signal: controller.signal, pollMs: 1 };
+        const result = flow === 'lookupPeerRank'
+          ? await api[flow]('https://linkedin.com/in/example', 'example', options)
+          : await api[flow]('test-task', options);
+        assert.equal(result.status, 'unavailable');
+      } finally {
+        controller.abort();
+      }
+    });
+  }
+}
