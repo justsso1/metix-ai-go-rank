@@ -67,8 +67,7 @@
 .rv-material-glare { z-index: 2; background-image: radial-gradient(farthest-corner circle at var(--foil-x) var(--foil-y), #fff 0%, #fff8 12%, #fff0 48%), repeating-linear-gradient(133deg, #fff0, #fff0 9%, #d2faff99 11%, #fff, #ffcefa88 13%, #fff0 16%, #fff0 24%); background-size: 100% 100%, 300% 300%; background-position: center, var(--foil-band-x) var(--foil-band-y); mix-blend-mode: screen; opacity: calc(var(--foil-active) * .32); }
 .rv-card-information { position: relative; z-index: 2; padding: 28px 30px 20px; }
 .rv-theme-gold::before { content: ''; position: absolute; z-index: 3; inset: 5px; border: 1px solid #d4bd8659; border-radius: 15px; pointer-events: none; }
-.rv-theme-standard .rv-material-base::after, .rv-theme-standard .rv-material-iridescence, .rv-theme-standard .rv-material-texture, .rv-theme-standard .rv-material-glare { display: none; }
-.rv-theme-standard .rv-card-material { filter: none; }
+.rv-theme-standard .rv-material-base::after, .rv-theme-standard .rv-material-texture { display: none; }
 .rv-material-label { float: right; text-transform: none; font-family: var(--sans); letter-spacing: 0; color: var(--material-ink); font-size: 11px; }
 .rv-full-card:not(.rv-theme-standard) .rv-rank-kicker, .rv-full-card:not(.rv-theme-standard) .rv-material-label, .rv-full-card:not(.rv-theme-standard) .rv-identity-copy p { color: #49424e; }
 .rv-material-sweep { z-index: 3; overflow: hidden; opacity: 0; }

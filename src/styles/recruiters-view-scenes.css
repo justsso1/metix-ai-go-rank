@@ -11,9 +11,9 @@
 .rv-card-material { z-index: 1; mix-blend-mode: soft-light; }
 .rv-material-iridescence { opacity: calc(var(--foil-active) * .34); }
 .rv-full-card .rv-material-glare { opacity: calc(var(--foil-active) * .32); }
-/* Mist opal keeps its static coat and shares the metallic cards' moving light. */
-.rv-full-card.rv-theme-standard .rv-card-material { filter: none; }
-.rv-full-card.rv-theme-standard :is(.rv-material-iridescence, .rv-material-glare) { display: block; }
+/* Gray opal amplifies soft-light more than the pale gold coat. Match its light
+   response across the fixed diagonal material bands without changing the art. */
+.rv-full-card.rv-theme-standard .rv-card-material { mask-image: linear-gradient(45deg, #fff, rgb(255 255 255 / .9) 25%, rgb(255 255 255 / .22) 43%, rgb(255 255 255 / .22) 57%, rgb(255 255 255 / .6) 75%, #fff); }
 .rv-card-with-actions { min-width: 0; }
 .rv-opportunity-entry { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0 12px; margin: 20px 2px 0; padding-top: 12px; border-top: 1px solid var(--rv-line); }
 .rv-opportunity-entry h2, .rv-opportunity-link { font: 400 13px/1.5 var(--sans); letter-spacing: 0; }
