@@ -195,7 +195,6 @@ export function RankingCard({ result, interactive = false, shared = false, revea
   }, []);
   const geometry = useMemo(() => cardLayout(result, width), [result, width]);
   const artwork = useMemo(() => rankingCardSvg(result, width, { avatar: avatar.source, avatarPlaceholder: true }), [result, width, avatar.source]);
-  useNumberReflection(sensor, interactive && !reduced && themeName === 'standard', result, width, artwork);
   return <div className="rv-card-with-actions">
     <div ref={sensor} className="rv-card-sensor" style={{ aspectRatio: `${geometry.width} / ${geometry.height}` } as CSSProperties}>
       <div className="rv-card-flight">
@@ -215,7 +214,7 @@ export function RankingCard({ result, interactive = false, shared = false, revea
         </div>}
         <div className="rv-card-flight-light" aria-hidden="true"><i /></div>
         <i className="rv-corner-glint" aria-hidden="true" />
-        {themeName === 'standard' ? <div className="rv-card-material" aria-hidden="true"><div className="rv-material-glare" /></div> : <div className="rv-card-material" aria-hidden="true">
+        {themeName === 'standard' ? <div className="rv-card-material" aria-hidden="true"><div className="rv-material-iridescence" /><div className="rv-material-glare" /></div> : <div className="rv-card-material" aria-hidden="true">
           <div className="rv-material-iridescence" /><div className="rv-material-glare" />
           <div className={`rv-material-sweep ${reveal ? 'is-playing' : ''}`}><i /><i /></div>
         </div>}
@@ -225,57 +224,6 @@ export function RankingCard({ result, interactive = false, shared = false, revea
     {share && <ShareActions result={result} width={width} prepareImage={prepareImage} />}
   </div>;
 
-}
-
-/** Keep the imported pointer light on our shared SVG, without changing rank geometry. */
-function useNumberReflection(sensor: RefObject<HTMLElement | null>, enabled: boolean, result: RankLookupFound, width: number, artwork: string) {
-  const light = useSpring(0, { stiffness: 220, damping: 30 });
-  const position = useRef<{ result: RankLookupFound; width: number; transform: string } | null>(null);
-  useLayoutEffect(() => {
-    const surface = sensor.current, current = position.current;
-    // Avatar load/error can replace the SVG while the pointer light is settled.
-    // Restore that light only when the rank geometry and interaction stay the same.
-    if (!enabled || !surface || current?.result !== result || current.width !== width) return;
-    surface.querySelector('.rv-art-number-light')?.setAttribute('gradientTransform', current.transform);
-    surface.querySelector('.rv-art-number-reflection')?.setAttribute('opacity', String(light.get()));
-  }, [sensor, enabled, result, width, artwork, light]);
-  useEffect(() => {
-    const surface = sensor.current;
-    if (!surface) return;
-    // The artwork is replaced when its responsive SVG is rendered again.
-    // Delegate to the stable sensor and resolve the current SVG for each frame.
-    const paint = (value: number) => surface.querySelector('.rv-art-number-reflection')?.setAttribute('opacity', String(value));
-    light.jump(0);
-    paint(0);
-    if (!enabled) return;
-    const fine = window.matchMedia('(hover: hover) and (pointer: fine)');
-    const reset = () => light.set(0);
-    const unsubscribe = light.on('change', paint);
-    const move = (event: PointerEvent) => {
-      if (!fine.matches || event.pointerType === 'touch') { reset(); return; }
-      const rank = event.target instanceof Element ? event.target.closest<SVGGElement>('.rv-art-rank-number') : null;
-      const gradient = surface.querySelector<SVGRadialGradientElement>('.rv-art-number-light');
-      if (!rank || !gradient) { reset(); return; }
-      const matrix = rank.getScreenCTM();
-      if (!matrix) return;
-      const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(matrix.inverse());
-      const transform = `translate(${point.x} ${point.y}) scale(1 .8125)`;
-      position.current = { result, width, transform };
-      gradient.setAttribute('gradientTransform', transform);
-      light.set(1);
-    };
-    surface.addEventListener('pointermove', move);
-    surface.addEventListener('pointerleave', reset);
-    fine.addEventListener('change', reset);
-    window.addEventListener('blur', reset);
-    window.addEventListener('scroll', reset, { passive: true });
-    return () => {
-      unsubscribe(); light.jump(0); paint(0);
-      surface.removeEventListener('pointermove', move); surface.removeEventListener('pointerleave', reset);
-      fine.removeEventListener('change', reset);
-      window.removeEventListener('blur', reset); window.removeEventListener('scroll', reset);
-    };
-  }, [sensor, enabled, result, width, light]);
 }
 
 function useCardPointer(sensor: RefObject<HTMLElement | null>, enabled: boolean, podium: boolean) {

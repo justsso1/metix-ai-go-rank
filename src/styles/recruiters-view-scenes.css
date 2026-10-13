@@ -11,9 +11,9 @@
 .rv-card-material { z-index: 1; mix-blend-mode: soft-light; }
 .rv-material-iridescence { opacity: calc(var(--foil-active) * .34); }
 .rv-full-card .rv-material-glare { opacity: calc(var(--foil-active) * .32); }
-/* Opal silver: the static coat lives in the shared SVG; only its reflection moves. */
-.rv-full-card.rv-theme-standard .rv-card-material { filter: brightness(calc(1.015 + var(--foil-active) * .025)); }
-.rv-full-card.rv-theme-standard .rv-material-glare { display: block; background: radial-gradient(ellipse at var(--foil-x) var(--foil-y), #ffffffcf, #def3fa38 28%, transparent 62%); opacity: calc(var(--foil-active) * .13); }
+/* Mist opal keeps its static coat and shares the metallic cards' moving light. */
+.rv-full-card.rv-theme-standard .rv-card-material { filter: none; }
+.rv-full-card.rv-theme-standard :is(.rv-material-iridescence, .rv-material-glare) { display: block; }
 .rv-card-with-actions { min-width: 0; }
 .rv-opportunity-entry { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0 12px; margin: 20px 2px 0; padding-top: 12px; border-top: 1px solid var(--rv-line); }
 .rv-opportunity-entry h2, .rv-opportunity-link { font: 400 13px/1.5 var(--sans); letter-spacing: 0; }
