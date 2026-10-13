@@ -256,10 +256,6 @@ function taskState(data: unknown): RankTask {
   return data && typeof data === "object" ? data as RankTask : {};
 }
 
-function taskSucceeded(status: unknown): boolean {
-  return status === "succeeded" || status === "completed" || status === "success";
-}
-
 function taskFailed(status: unknown): boolean {
   return status === "failed" || status === "error";
 }
@@ -347,6 +343,7 @@ export async function lookupPeerRank(
     const submittedState = taskState(submitted.data);
     if (profileNotFound(submittedState.status)) return { status: "not_found", inputUrl: url, handle, suggestions: [] };
     if (rankUnavailable(submittedState.status)) return { status: "unavailable", inputUrl: url, message: "This ranking is unavailable." };
+    if (taskFailed(submittedState.status)) return { status: "unavailable", inputUrl: url, message: "This ranking is unavailable." };
     const task = acceptedTask(submitted.data);
     if (!task) throw new Error("The lookup did not finish. Try the URL again.");
 
@@ -369,12 +366,12 @@ export async function lookupPeerRank(
         const message = typeof state.errorMsg === "string" && state.errorMsg.trim()
           ? state.errorMsg.trim()
           : "We couldn't score that peer group. Try again in a moment.";
-        return { status: "invalid", inputUrl: url, message };
+        return { status: "unavailable", inputUrl: url, message };
       }
       if (!taskPending(state.status)) {
         const data = completedRankData(state);
         if (data) return rankFromPeerRank(url, handle, data, task.taskId);
-        if (taskSucceeded(state.status)) throw new Error("The lookup did not finish. Try the URL again.");
+        throw new Error("The lookup did not finish. Try the URL again.");
       }
       await wait(pollMs, options.signal);
     }
@@ -429,12 +426,12 @@ export async function lookupPeerRankTask(
       const message = typeof state.errorMsg === "string" && state.errorMsg.trim()
         ? state.errorMsg.trim()
         : "We couldn't score that peer group. Try again in a moment.";
-      return { status: "invalid", inputUrl: "", message };
+      return { status: "unavailable", inputUrl: "", message };
     }
     if (!taskPending(state.status)) {
       const data = completedRankData(state);
       if (data) return rankFromPeerRank("", id, data, id);
-      if (taskSucceeded(state.status)) throw new Error("The lookup did not finish. Try the link again.");
+      throw new Error("The lookup did not finish. Try the link again.");
     }
 
     options.onProgress?.({ step: "rank" });

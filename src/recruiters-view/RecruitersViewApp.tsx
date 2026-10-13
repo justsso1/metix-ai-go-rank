@@ -532,13 +532,21 @@ export default function RecruitersViewApp({
           0,
           missingResultAddress(parsed.handle),
         );
-      } else showInlineError(next.message);
+      } else
+        showUnavailableResult(
+          { status: "unavailable", inputUrl: parsed.url, message: next.message },
+          !!params,
+          0,
+          missingResultAddress(parsed.handle),
+        );
     } catch (err) {
-      if ((err as Error).name === "AbortError") return;
+      if (controller.signal.aborted || (err as Error | null)?.name === "AbortError") return;
       trackCampaign("lookup_error", { reason: "service_error" });
-      showInlineError(
-        (err as Error).message ||
-          "The lookup did not finish. Try the URL again.",
+      showUnavailableResult(
+        { status: "unavailable", inputUrl: parsed.url, message: "This ranking is unavailable." },
+        !!params,
+        0,
+        missingResultAddress(parsed.handle),
       );
     } finally {
       if (abortRef.current === controller) {
@@ -590,13 +598,17 @@ export default function RecruitersViewApp({
         setReturnScroll(0);
       } else if (next.status === "not_found" || next.status === "unavailable")
         showUnavailableResult(next, true);
-      else showInlineError(next.message);
+      else
+        showUnavailableResult(
+          { status: "unavailable", inputUrl: "", message: next.message },
+          true,
+        );
     } catch (err) {
-      if ((err as Error).name === "AbortError") return;
+      if (controller.signal.aborted || (err as Error | null)?.name === "AbortError") return;
       trackCampaign("lookup_error", { reason: "service_error" });
-      showInlineError(
-        (err as Error).message ||
-          "The lookup did not finish. Try the link again.",
+      showUnavailableResult(
+        { status: "unavailable", inputUrl: "", message: "This ranking is unavailable." },
+        true,
       );
     } finally {
       if (abortRef.current === controller) {
@@ -1047,21 +1059,13 @@ function MissingResult({
   useEffect(() => {
     heading.current?.focus({ preventScroll: true });
   }, []);
-  const notFound = result.status === "not_found";
   return (
     <article className="rv-card rv-miss-card">
-      <p className="rv-rank-kicker">
-        {notFound ? "Not in the index yet" : "Ranking unavailable"}
-      </p>
+      <p className="rv-rank-kicker">Not in the index yet</p>
       <h1 ref={heading} tabIndex={-1} className="rv-missing-title">
         Your profile is not in the recruiter search index yet.
       </h1>
       {result.inputUrl && <p className="rv-missing-url">{result.inputUrl}</p>}
-      {!notFound && (
-        <p className="rv-missing-message" role="alert">
-          {result.message}
-        </p>
-      )}
       <ul>
         {GENERIC_SUGGESTIONS.map((item) => (
           <li key={item}>{item}</li>
