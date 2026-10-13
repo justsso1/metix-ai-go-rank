@@ -28,7 +28,7 @@ export const STORY_FOILS = {
   standard: {
     edge: '#AEB7C2', coat: '#B8C1CC',
     palette: ['#84AAA9', '#9EBFBB', '#B3C8C2', '#BCC7C7', '#AEB7C2', '#A5BBBB', '#96BAB8', '#A7A3B8', '#AFA1C2', '#C2B6CE'],
-    corner: '#BDCFCB', near: '#7CA6A06B', far: '#A794B976', reflection: '#D4CDDF',
+    corner: '#BDCFCB', near: '#7CA6A06B', far: '#A794B976', reflection: '#fff0b480',
   },
   gold: {
     edge: '#d8b365',

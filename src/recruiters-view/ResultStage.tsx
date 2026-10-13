@@ -214,10 +214,10 @@ export function RankingCard({ result, interactive = false, shared = false, revea
         </div>}
         <div className="rv-card-flight-light" aria-hidden="true"><i /></div>
         <i className="rv-corner-glint" aria-hidden="true" />
-        {themeName === 'standard' ? <div className="rv-card-material" aria-hidden="true"><div className="rv-material-iridescence" /><div className="rv-material-glare" /></div> : <div className="rv-card-material" aria-hidden="true">
+        <div className="rv-card-material" aria-hidden="true">
           <div className="rv-material-iridescence" /><div className="rv-material-glare" />
           <div className={`rv-material-sweep ${reveal ? 'is-playing' : ''}`}><i /><i /></div>
-        </div>}
+        </div>
       </motion.article>
       </div>
     </div>
@@ -227,7 +227,7 @@ export function RankingCard({ result, interactive = false, shared = false, revea
 }
 
 function useCardPointer(sensor: RefObject<HTMLElement | null>, enabled: boolean, podium: boolean) {
-  const spring = { stiffness: podium ? 180 : 220, damping: podium ? 22 : 26, mass: 0.8 };
+  const spring = { stiffness: 180, damping: 22, mass: 0.8 };
   const x = useSpring(0, spring);
   const y = useSpring(0, spring);
   const strength = useSpring(0, spring);
